@@ -1,5 +1,6 @@
 const axios = require("axios");
 
+const defaultLongPollInterval = 60 * 1000; // 60s
 class PushMeSDK {
   constructor({ backendUrl }) {
     this.backendUrl = backendUrl;
@@ -20,13 +21,13 @@ class PushMeSDK {
   }
 
   // subscribe fn
-  async longPollStatus(pushIdent) {
+  async longPollPushStatus(pushIdent) {
     let returnData = null;
     try {
       const pushStatus = await axios.get(
         `${this.backendUrl}/push/${pushIdent}/poll`,
         {
-          timeout: 60 * 1000, // 60s
+          timeout: defaultLongPollInterval,
         }
       );
       returnData = pushStatus.data;
@@ -36,13 +37,17 @@ class PushMeSDK {
       if (returnData) {
         return returnData;
       } else {
-        await longPollStatus(pushIdent);
+        await this.longPollPushStatus(pushIdent);
       }
     }
   }
 
   async requestPush(topicSecret, pushData) {
-    return axios.post(`${this.backendUrl}/push/${topicSecret}`, pushData);
+    const requestedPush = await axios.post(
+      `${this.backendUrl}/push/${topicSecret}`,
+      pushData
+    );
+    return requestedPush.data;
   }
 }
 
