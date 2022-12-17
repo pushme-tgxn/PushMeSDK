@@ -1,54 +1,97 @@
-const axios = require("axios");
+import { BACKEND_URL, NotificationDefinitions } from "./const.js";
 
-const defaultLongPollInterval = 60 * 1000; // 60s
-class PushMeSDK {
-  constructor({ backendUrl }) {
-    this.backendUrl = backendUrl;
-    console.log(`this.backendUrl: ${backendUrl}`);
-  }
+import fetch from "node-fetch";
 
-  async getPushStatus(pushIdent) {
-    try {
-      const pushStatus = await axios.get(
-        `${this.backendUrl}/push/${pushIdent}/status`
-      );
-      // console.log(pushStatus.data);
-      return pushStatus.data;
-    } catch (error) {
-      console.error(error);
-    }
-    return null;
-  }
+import UserService from "./service/user.js";
+import DeviceService from "./service/device.js";
+import TopicService from "./service/topic.js";
+import PushService from "./service/push.js";
 
-  // subscribe fn
-  async longPollPushStatus(pushIdent) {
-    let returnData = null;
-    try {
-      const pushStatus = await axios.get(
-        `${this.backendUrl}/push/${pushIdent}/poll`,
-        {
-          timeout: defaultLongPollInterval,
+export { BACKEND_URL, NotificationDefinitions };
+
+export default class APIService {
+    constructor(config) {
+        this.authorization = null;
+        this.backendUrl = BACKEND_URL;
+        this.logger = false;
+
+        this.user = new UserService(this);
+        this.device = new DeviceService(this);
+        this.topic = new TopicService(this);
+        this.push = new PushService(this);
+
+        if (config.backendUrl) {
+            this.setBackendUrl(config.backendUrl);
         }
-      );
-      returnData = pushStatus.data;
-    } catch (error) {
-      console.error(error.toString());
-    } finally {
-      if (returnData) {
-        return returnData;
-      } else {
-        await this.longPollPushStatus(pushIdent);
-      }
+
+        if (config.accessToken) {
+            this.setAccessToken(config.accessToken);
+        }
+
+        if (config.logging) {
+            this.logger = config.logging;
+
+            // allow setting to true to log it
+            if (config.logging === true) {
+                this.logger = this._log;
+            }
+        }
     }
-  }
 
-  async requestPush(topicSecret, pushData) {
-    const requestedPush = await axios.post(
-      `${this.backendUrl}/push/${topicSecret}`,
-      pushData
-    );
-    return requestedPush.data;
-  }
+    _log(...args) {
+        if (this.logger) {
+            this.logger(...args);
+        }
+    }
+
+    getBackendUrl() {
+        return this.backendUrl;
+    }
+
+    isDefaultBackend() {
+        return this.backendUrl === BACKEND_URL;
+    }
+
+    resetBackend() {
+        this.backendUrl = BACKEND_URL;
+    }
+
+    setBackendUrl(backendUrl) {
+        this._log("setBackendUrl", backendUrl);
+        this.backendUrl = backendUrl;
+    }
+
+    setAccessToken(accessToken) {
+        this._log("setAccessToken", accessToken);
+        this.accessToken = accessToken;
+        this.authorization = `Bearer ${accessToken}`;
+    }
+
+    async _callApi(path, method, payload = null) {
+        try {
+            const headers = {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            };
+            if (this.authorization) {
+                headers.Authorization = this.authorization;
+            }
+            this._log("_callApi", method, `${this.backendUrl}${path}`);
+            const fetchResponse = await fetch(`${this.backendUrl}${path}`, {
+                method,
+                headers,
+                body: payload ? JSON.stringify(payload) : null,
+            });
+
+            const jsonResponse = await fetchResponse.json();
+
+            if (jsonResponse.message == "Unauthorized") {
+                throw new Error("Unauthorized");
+            }
+
+            return jsonResponse;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
-
-module.exports = PushMeSDK;

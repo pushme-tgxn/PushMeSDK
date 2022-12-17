@@ -1,3 +1,5 @@
+export const BACKEND_URL = "https://pushme.tgxn.net";
+
 // `actions` docs: https://docs.expo.dev/versions/latest/sdk/notifications/#arguments-21
 export const NotificationDefinitions = {
     "simple.push": {

@@ -7,18 +7,22 @@
         "console",
         "sdk"
     ],
+    "type": "module",
     "version": "1.0.0",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
     "main": "src/index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "mocha"
     },
     "license": "MIT",
     "dependencies": {
-        "axios": "^0.24.0",
-        "dotenv": "^10.0.0"
+        "dotenv": "^10.0.0",
+        "node-fetch": "^3.3.0"
     },
     "devDependencies": {
+        "@faker-js/faker": "^7.6.0",
+        "chai": "^4.3.7",
+        "mocha": "^10.2.0",
         "prettier": "^2.8.1"
     }
 }
