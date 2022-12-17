@@ -1,5 +1,5 @@
 {
-    "name": "pushme-sdk",
+    "name": "@pushme-tgxn/pushmesdk",
     "author": "tgxn <pushme@tgxn.net>",
     "keywords": [
         "javascript",
