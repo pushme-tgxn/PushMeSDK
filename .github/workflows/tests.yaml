@@ -1,0 +1,30 @@
+name: Run Tests
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Start docker container
+        run: |
+          cd test
+          docker-compose up -d
+          docker-compose exec pushme npx sequelize-cli db:migrate
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run All Node.js Tests
+        run: npm run test
