@@ -5,6 +5,8 @@ services:
     image: ghcr.io/pushme-tgxn/pushme:main
     environment:
       NODE_ENV: test
+      JWT_SECRET: super-secret-key
+      NO_DUO_AUTH: true
     ports:
       - 3000:3000
     restart: unless-stopped
