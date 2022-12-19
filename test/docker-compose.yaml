@@ -4,6 +4,7 @@ services:
   pushme:
     image: ghcr.io/pushme-tgxn/pushme:main
     environment:
-      NODE_ENV: production
-
+      NODE_ENV: development
+    ports:
+      - 3000:3000
     restart: unless-stopped

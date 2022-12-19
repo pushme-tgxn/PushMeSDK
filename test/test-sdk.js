@@ -9,7 +9,7 @@ describe("PushMeSDK", () => {
 
     describe("Class", () => {
         const defaultBackendUrl = "https://pushme.tgxn.net";
-        const testBackendUrl = "http://10.1.1.20:3000";
+        const testBackendUrl = "http://localhost:3000";
 
         it("check default config", async () => {
             expect(BACKEND_URL).to.exist.and.equal(defaultBackendUrl);
