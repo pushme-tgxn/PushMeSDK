@@ -21,6 +21,7 @@ jobs:
           cd test
           docker-compose run --rm pushme npx sequelize-cli db:migrate --env test
           docker-compose up -d
+          docker-compose logs
 
       - uses: actions/setup-node@v3
         with:
