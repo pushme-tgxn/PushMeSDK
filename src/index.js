@@ -1,6 +1,6 @@
 import { BACKEND_URL, NotificationDefinitions } from "./const.js";
 
-import fetch from "node-fetch";
+import axios from "axios";
 
 import UserService from "./service/user.js";
 import DeviceService from "./service/device.js";
@@ -77,7 +77,7 @@ export default class APIService {
                 headers.Authorization = this.authorization;
             }
             this._log("_callApi", method, `${this.backendUrl}${path}`);
-            const fetchResponse = await fetch(`${this.backendUrl}${path}`, {
+            const fetchResponse = await axios(`${this.backendUrl}${path}`, {
                 method,
                 headers,
                 body: payload ? JSON.stringify(payload) : null,
