@@ -67,23 +67,34 @@ export default class APIService {
         this.authorization = `Bearer ${accessToken}`;
     }
 
-    async _callApi(path, method, payload = null) {
+    async _callApi(path, method, payload = null, config = null) {
         try {
             const headers = {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             };
+
             if (this.authorization) {
                 headers.Authorization = this.authorization;
             }
-            this._log("_callApi", method, `${this.backendUrl}${path}`);
-            const fetchResponse = await axios(`${this.backendUrl}${path}`, {
+
+            const axiosConfig = {
+                ...config,
                 method,
                 headers,
-                body: payload ? JSON.stringify(payload) : null,
-            });
+                responseType: "json",
+                timeout: 1500,
+            };
 
-            const jsonResponse = await fetchResponse.json();
+            if (payload && method !== "GET") {
+                axiosConfig.data = payload;
+            }
+
+            this._log("_callApi", method, `${this.backendUrl}${path}`, payload);
+            const fetchResponse = await axios(`${this.backendUrl}${path}`, axiosConfig);
+            this._log("_apiResponse", fetchResponse.data);
+
+            const jsonResponse = fetchResponse.data;
 
             if (jsonResponse.message == "Unauthorized") {
                 throw new Error("Unauthorized");
