@@ -4,7 +4,7 @@ import { faker } from "@faker-js/faker"; // https://www.npmjs.com/package/@faker
 
 import PushMe, { BACKEND_URL } from "../src/index.js";
 
-describe("PushMeSDK", () => {
+describe("PushMeSDK", function () {
     let pushMeInstance;
 
     // so we can get lots of instances with the same backend
@@ -16,7 +16,7 @@ describe("PushMeSDK", () => {
         });
     };
 
-    describe("API Class", () => {
+    describe("API Class", function () {
         const defaultBackendUrl = "https://pushme.tgxn.net";
 
         it("check default config", async () => {
@@ -30,7 +30,7 @@ describe("PushMeSDK", () => {
         });
     });
 
-    describe("User Service", () => {
+    describe("User Service", function () {
         let testUserId, testUserToken;
 
         const emailAddress = faker.internet.email();
@@ -104,7 +104,7 @@ describe("PushMeSDK", () => {
     });
 
     let createdDeviceId;
-    describe("Device Service", () => {
+    describe("Device Service", function () {
         const fakeDeviceKey = faker.datatype.uuid();
         const fakeExpoToken = `ExponentPushToken[${faker.lorem.slug()}]`;
         const fakeNativeToken = {
@@ -161,13 +161,11 @@ describe("PushMeSDK", () => {
     });
 
     let topicId, topicKey, topicSecret;
-    describe("Topic Service", () => {
+    describe("Topic Service", function () {
         it("can create topic", async () => {
             const result = await pushMeInstance.topic.create({
                 deviceIds: [createdDeviceId],
             });
-
-            console.log(result);
 
             expect(result.success).to.exist.and.equal(true);
             expect(result.topic).to.exist;
@@ -206,8 +204,6 @@ describe("PushMeSDK", () => {
                 deviceIds: [createdDeviceId],
             });
 
-            console.log(result);
-
             expect(result.success).to.exist.and.equal(true);
             expect(result.topic).to.exist;
             expect(result.topic.id).to.exist.and.equal(topicId);
@@ -218,7 +214,7 @@ describe("PushMeSDK", () => {
         });
     });
 
-    describe("Push Service", () => {
+    describe("Push Service", function () {
         let sentPushIdent;
 
         // pushing and responses shoudl be available without authentication
@@ -272,5 +268,41 @@ describe("PushMeSDK", () => {
             expect(result.firstValidResponse.actionIdentifier).to.exist.and.equal("submit");
             expect(result.firstValidResponse.responseText).to.exist.and.equal("hello");
         });
+    });
+
+    describe("Trio Push Service", function () {
+        // pushing and responses shoudl be available without authentication
+        const unauthenticatedInstance = getNewInstance();
+
+        it("can ping service", async () => {
+            const result = await unauthenticatedInstance.trio.ping();
+
+            expect(result.stat).to.exist.and.equal("OK");
+            expect(result.response.time).to.exist;
+
+            // this will allow authentication with secret instead of signature
+            expect(result.response.validation).to.exist.and.equal("skipped");
+        });
+
+        let authDeviceIdent;
+        it("can preauth (get device ident)", async () => {
+            const result = await unauthenticatedInstance.trio.preAuth(topicKey, topicSecret);
+
+            expect(result.stat).to.exist.and.equal("OK");
+            expect(result.response.devices).to.exist;
+            expect(result.response.devices[0].device).to.exist;
+
+            authDeviceIdent = result.response.devices[0].device;
+        });
+
+        // wait for timeout
+        it("can auth", async () => {
+            const result = await unauthenticatedInstance.trio.auth(topicKey, topicSecret, authDeviceIdent);
+
+            expect(result.stat).to.exist.and.equal("OK");
+
+            expect(result.response.result).to.exist.and.equal("deny");
+            expect(result.serviceData.actionIdentifier).to.exist.and.equal("noresponse");
+        }).timeout(35000);
     });
 });
