@@ -6,7 +6,8 @@ services:
     environment:
       - NODE_ENV=test
       - JWT_SECRET=super-secret-key
-      - NO_DUO_AUTH=true
+      - NO_DUO_AUTH=true # disable authentication duo token (instead it will check the topic secret)
+      - DISABLE_PUSHING=true # disable sending any push notifications for tests
     ports:
       - 3000:3000
     restart: unless-stopped
