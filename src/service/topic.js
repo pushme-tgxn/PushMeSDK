@@ -3,11 +3,11 @@ export default class TopicService {
         this.apiService = apiService;
     }
 
-    getList() {
+    list() {
         return this.apiService._callApi("/topic", "GET");
     }
 
-    getTopic(topicId) {
+    getById(topicId) {
         return this.apiService._callApi(`/topic/${topicId}`, "GET");
     }
 

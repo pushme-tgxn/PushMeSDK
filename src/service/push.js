@@ -1,4 +1,4 @@
-export const longPollIntervalMs = 60 * 1000; // 60s
+import { POLLING_TIMEOUT } from "../const.js";
 
 export default class PushService {
     constructor(apiService) {
@@ -23,8 +23,6 @@ export default class PushService {
     }
 
     longPollPushStatus(pushIdent) {
-        return this.apiService._callApi(`/push/${pushIdent}/status`, "GET", {
-            timeout: longPollIntervalMs,
-        });
+        return this.apiService._callApi(`/push/${pushIdent}/status`, "GET", {}, { timeout: POLLING_TIMEOUT });
     }
 }

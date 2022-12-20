@@ -7,7 +7,7 @@ export default class DeviceService {
         return this.apiService._callApi("/device", "GET");
     }
 
-    get(deviceId) {
+    getById(deviceId) {
         return this.apiService._callApi(`/device/${deviceId}`, "GET");
     }
 

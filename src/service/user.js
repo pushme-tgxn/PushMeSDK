@@ -10,6 +10,18 @@ export default class UserService {
         });
     }
 
+    updateEmail(userEmail) {
+        return this.apiService._callApi("/auth/email/email", "POST", {
+            email: userEmail,
+        });
+    }
+
+    updatePassword(userPassword) {
+        return this.apiService._callApi("/auth/email/password", "POST", {
+            password: userPassword,
+        });
+    }
+
     async emailLogin(userEmail, userPassword) {
         const authResult = await this.apiService._callApi("/auth/email/login", "POST", {
             email: userEmail,

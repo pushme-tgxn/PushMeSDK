@@ -1,4 +1,4 @@
-import { BACKEND_URL, NotificationDefinitions } from "./const.js";
+import { DEFAULT_TIMEOUT, BACKEND_URL, NotificationDefinitions } from "./const.js";
 
 import axios from "axios";
 
@@ -79,11 +79,11 @@ export default class APIService {
             }
 
             const axiosConfig = {
-                ...config,
                 method,
                 headers,
                 responseType: "json",
-                timeout: 1500,
+                timeout: DEFAULT_TIMEOUT,
+                ...config,
             };
 
             if (payload && method !== "GET") {

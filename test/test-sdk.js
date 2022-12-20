@@ -5,9 +5,9 @@ import { faker } from "@faker-js/faker"; // https://www.npmjs.com/package/@faker
 import PushMe, { BACKEND_URL } from "../src/index.js";
 
 describe("PushMeSDK", () => {
-    let pushMeInstance, testUserToken;
+    let pushMeInstance;
 
-    describe("Class", () => {
+    describe("API Class", () => {
         const defaultBackendUrl = "https://pushme.tgxn.net";
         const testBackendUrl = "http://10.1.1.20:3000";
 
@@ -25,7 +25,9 @@ describe("PushMeSDK", () => {
         });
     });
 
-    describe("UserService", () => {
+    describe("User Service", () => {
+        let testUserId, testUserToken;
+
         const emailAddress = faker.internet.email();
         const password = faker.internet.password();
 
@@ -37,6 +39,9 @@ describe("PushMeSDK", () => {
 
             expect(result.success).to.exist.and.equal(true);
             expect(result.user).to.exist;
+            expect(result.user.id).to.exist;
+
+            testUserId = result.user.id;
         });
 
         it("can login", async () => {
@@ -60,6 +65,30 @@ describe("PushMeSDK", () => {
             expect(result.methods[0].methodIdent).to.exist.and.equal(emailAddress);
         });
 
+        it("can update email", async () => {
+            const result = await pushMeInstance.user.updateEmail(newEmailAddress);
+
+            expect(result.success).to.exist.and.equal(true);
+            expect(result.userId).to.exist.and.equal(testUserId);
+        });
+
+        it("can update password", async () => {
+            const result = await pushMeInstance.user.updatePassword(newPassword);
+
+            expect(result.success).to.exist.and.equal(true);
+            expect(result.userId).to.exist.and.equal(testUserId);
+        });
+
+        it("can get new user details", async () => {
+            const result = await pushMeInstance.user.getCurrentUser();
+
+            expect(result.success).to.exist.and.equal(true);
+            expect(result.user).to.exist;
+            expect(result.methods).to.exist;
+            expect(result.methods[0].method).to.exist.and.equal("email");
+            expect(result.methods[0].methodIdent).to.exist.and.equal(newEmailAddress);
+        });
+
         it("can get user push history", async () => {
             const result = await pushMeInstance.user.getPushHistory();
 
@@ -69,59 +98,8 @@ describe("PushMeSDK", () => {
         });
     });
 
-    describe("TopicService", () => {
-        let topicId, topicKey, topicSecret;
-
-        it("can create topic", async () => {
-            const result = await pushMeInstance.topic.create();
-
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.topic).to.exist;
-            expect(result.topic.id).to.exist;
-            expect(result.topic.topicKey).to.exist;
-            expect(result.topic.secretKey).to.exist;
-
-            topicId = result.topic.id;
-            topicKey = result.topic.topicKey;
-            topicSecret = result.topic.secretKey;
-        });
-
-        it("can get topic details", async () => {
-            const result = await pushMeInstance.topic.getTopic(topicId);
-
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.topic).to.exist;
-            expect(result.topic.id).to.exist.and.equal(topicId);
-            expect(result.topic.topicKey).to.exist.and.equal(topicKey);
-            expect(result.topic.secretKey).to.exist.and.equal(topicSecret);
-        });
-
-        it("can get all topics", async () => {
-            const result = await pushMeInstance.topic.getList();
-
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.topics).to.exist;
-            expect(result.topics.length).to.exist.and.equal(1);
-            expect(result.topics[0].topicKey).to.exist.and.equal(topicKey);
-            expect(result.topics[0].secretKey).to.exist.and.equal(topicSecret);
-        });
-
-        it("can update topic", async () => {
-            const result = await pushMeInstance.topic.update(topicId, {
-                name: "Test Topic",
-            });
-
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.topic).to.exist;
-            expect(result.topic.id).to.exist.and.equal(topicId);
-            expect(result.topic.topicKey).to.exist.and.equal(topicKey);
-            expect(result.topic.secretKey).to.exist.and.equal(topicSecret);
-
-            expect(result.topic.name).to.exist.and.equal("Test Topic");
-        });
-    });
-
-    describe("DeviceService", () => {
+    let createdDeviceId;
+    describe("Device Service", () => {
         const fakeDeviceKey = faker.datatype.uuid();
         const fakeExpoToken = `ExponentPushToken[${faker.lorem.slug()}]`;
         const fakeNativeToken = {
@@ -129,12 +107,9 @@ describe("PushMeSDK", () => {
             data: faker.datatype.uuid(),
         };
 
-        let createdDeviceId;
-
         it("can create device", async () => {
             const result = await pushMeInstance.device.create({
                 deviceKey: fakeDeviceKey,
-                // name: fakeDeviceKey,
                 token: fakeExpoToken,
                 nativeToken: fakeNativeToken,
             });
@@ -168,7 +143,7 @@ describe("PushMeSDK", () => {
         });
 
         it("can get device details", async () => {
-            const result = await pushMeInstance.device.get(createdDeviceId);
+            const result = await pushMeInstance.device.getById(createdDeviceId);
 
             expect(result.success).to.exist.and.equal(true);
             expect(result.device).to.exist;
@@ -177,6 +152,94 @@ describe("PushMeSDK", () => {
             expect(result.device.deviceKey).to.exist.and.equal(fakeDeviceKey);
             expect(result.device.token).to.exist.and.equal(fakeExpoToken);
             expect(result.device.nativeToken).to.exist.and.equal(JSON.stringify(fakeNativeToken));
+        });
+    });
+
+    let topicId, topicKey, topicSecret;
+    describe("Topic Service", () => {
+        it("can create topic", async () => {
+            const result = await pushMeInstance.topic.create({
+                deviceIds: [createdDeviceId],
+            });
+
+            console.log(result);
+
+            expect(result.success).to.exist.and.equal(true);
+            expect(result.topic).to.exist;
+            expect(result.topic.id).to.exist;
+            expect(result.topic.topicKey).to.exist;
+            expect(result.topic.secretKey).to.exist;
+
+            topicId = result.topic.id;
+            topicKey = result.topic.topicKey;
+            topicSecret = result.topic.secretKey;
+        });
+
+        it("can get topic details", async () => {
+            const result = await pushMeInstance.topic.getById(topicId);
+
+            expect(result.success).to.exist.and.equal(true);
+            expect(result.topic).to.exist;
+            expect(result.topic.id).to.exist.and.equal(topicId);
+            expect(result.topic.topicKey).to.exist.and.equal(topicKey);
+            expect(result.topic.secretKey).to.exist.and.equal(topicSecret);
+        });
+
+        it("can get all topics", async () => {
+            const result = await pushMeInstance.topic.list();
+
+            expect(result.success).to.exist.and.equal(true);
+            expect(result.topics).to.exist;
+            expect(result.topics.length).to.exist.and.equal(1);
+            expect(result.topics[0].topicKey).to.exist.and.equal(topicKey);
+            expect(result.topics[0].secretKey).to.exist.and.equal(topicSecret);
+        });
+
+        it("can update topic", async () => {
+            const result = await pushMeInstance.topic.update(topicId, {
+                name: "Test Topic",
+                deviceIds: [createdDeviceId],
+            });
+
+            console.log(result);
+
+            expect(result.success).to.exist.and.equal(true);
+            expect(result.topic).to.exist;
+            expect(result.topic.id).to.exist.and.equal(topicId);
+            expect(result.topic.topicKey).to.exist.and.equal(topicKey);
+            expect(result.topic.secretKey).to.exist.and.equal(topicSecret);
+
+            expect(result.topic.name).to.exist.and.equal("Test Topic");
+        });
+    });
+
+    describe("Push Service", () => {
+        let sentPushIdent;
+
+        it("sends a push", async () => {
+            const result = await pushMeInstance.push.pushToTopic(topicSecret, {
+                categoryId: "default",
+                title: "Test Push",
+                body: "This is a test push",
+                data: {
+                    test: "data",
+                },
+            });
+
+            expect(result.success).to.exist.and.equal(true);
+            expect(result.pushIdent).to.exist;
+
+            sentPushIdent = result.pushIdent;
+        });
+
+        it("can get push details", async () => {
+            const result = await pushMeInstance.push.getPushStatus(sentPushIdent);
+
+            expect(result.success).to.exist.and.equal(true);
+            expect(result.pushData).to.exist;
+            expect(result.pushData.categoryId).to.exist.and.equal("default");
+            expect(result.pushData.title).to.exist.and.equal("Test Push");
+            expect(result.pushData.body).to.exist.and.equal("This is a test push");
         });
     });
 });
