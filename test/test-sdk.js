@@ -7,18 +7,24 @@ import PushMe, { BACKEND_URL } from "../src/index.js";
 describe("PushMeSDK", () => {
     let pushMeInstance;
 
+    // so we can get lots of instances with the same backend
+    const testBackendUrl = process.env.TEST_BACKEND || "http://localhost:3000";
+    const getNewInstance = (config) => {
+        return new PushMe({
+            ...config,
+            backendUrl: testBackendUrl,
+        });
+    };
+
     describe("API Class", () => {
         const defaultBackendUrl = "https://pushme.tgxn.net";
-        const testBackendUrl = process.env.TEST_BACKEND || "http://localhost:3000";
 
         it("check default config", async () => {
             expect(BACKEND_URL).to.exist.and.equal(defaultBackendUrl);
         });
 
         it("setup instance", async () => {
-            pushMeInstance = new PushMe({
-                backendUrl: testBackendUrl,
-            });
+            pushMeInstance = getNewInstance();
 
             expect(pushMeInstance.backendUrl).to.exist.and.equal(testBackendUrl);
         });
@@ -215,8 +221,11 @@ describe("PushMeSDK", () => {
     describe("Push Service", () => {
         let sentPushIdent;
 
+        // pushing and responses shoudl be available without authentication
+        const unauthenticatedInstance = getNewInstance();
+
         it("sends a push", async () => {
-            const result = await pushMeInstance.push.pushToTopic(topicSecret, {
+            const result = await unauthenticatedInstance.push.pushToTopic(topicSecret, {
                 categoryId: "default",
                 title: "Test Push",
                 body: "This is a test push",
@@ -232,13 +241,36 @@ describe("PushMeSDK", () => {
         });
 
         it("can get push details", async () => {
-            const result = await pushMeInstance.push.getPushStatus(sentPushIdent);
+            const result = await unauthenticatedInstance.push.getPushStatus(sentPushIdent);
 
             expect(result.success).to.exist.and.equal(true);
             expect(result.pushData).to.exist;
             expect(result.pushData.categoryId).to.exist.and.equal("default");
             expect(result.pushData.title).to.exist.and.equal("Test Push");
             expect(result.pushData.body).to.exist.and.equal("This is a test push");
+        });
+
+        it("can respond to push", async () => {
+            const result = await unauthenticatedInstance.push.respondToPush(sentPushIdent, {
+                // pushIdent: sentPushIdent,
+                // pushId: response.notification.request.content.data.pushId,
+                categoryIdentifier: "button.submit", // catgry of notification
+                actionIdentifier: "submit", // action that was taken
+                responseText: "hello", // extra text
+            });
+
+            expect(result.success).to.exist.and.equal(true);
+            // expect(result.pushData).to.exist;
+        });
+
+        it("can get push details", async () => {
+            const result = await unauthenticatedInstance.push.getPushStatus(sentPushIdent);
+
+            expect(result.success).to.exist.and.equal(true);
+            expect(result.pushData).to.exist;
+            expect(result.firstValidResponse.categoryIdentifier).to.exist.and.equal("button.submit");
+            expect(result.firstValidResponse.actionIdentifier).to.exist.and.equal("submit");
+            expect(result.firstValidResponse.responseText).to.exist.and.equal("hello");
         });
     });
 });
