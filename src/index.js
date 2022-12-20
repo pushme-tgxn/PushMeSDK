@@ -6,6 +6,7 @@ import UserService from "./service/user.js";
 import DeviceService from "./service/device.js";
 import TopicService from "./service/topic.js";
 import PushService from "./service/push.js";
+import TrioService from "./service/trio.js";
 
 export { BACKEND_URL, NotificationDefinitions };
 
@@ -19,6 +20,9 @@ export default class APIService {
         this.device = new DeviceService(this);
         this.topic = new TopicService(this);
         this.push = new PushService(this);
+
+        // "Trio" to avoid *confusion* with another well-known company
+        this.trio = new TrioService(this);
 
         if (config.backendUrl) {
             this.setBackendUrl(config.backendUrl);

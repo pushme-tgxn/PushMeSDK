@@ -22,4 +22,8 @@ export default class DeviceService {
     delete(deviceId) {
         return this.apiService._callApi(`/device/${deviceId}`, "DELETE");
     }
+
+    testDevice(deviceKey) {
+        return this.apiService._callApi(`/device/${deviceKey}/test`, "POST");
+    }
 }
