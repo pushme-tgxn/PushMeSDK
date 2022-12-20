@@ -4,6 +4,9 @@ on:
     branches:
       - main
 
+env:
+  TEST_BACKEND: http://localhost:3000
+
 jobs:
   test:
     runs-on: ubuntu-latest

@@ -9,7 +9,7 @@ describe("PushMeSDK", () => {
 
     describe("API Class", () => {
         const defaultBackendUrl = "https://pushme.tgxn.net";
-        const testBackendUrl = "http://10.1.1.20:3000";
+        const testBackendUrl = process.env.TEST_BACKEND || "http://localhost:3000";
 
         it("check default config", async () => {
             expect(BACKEND_URL).to.exist.and.equal(defaultBackendUrl);
@@ -18,9 +18,8 @@ describe("PushMeSDK", () => {
         it("setup instance", async () => {
             pushMeInstance = new PushMe({
                 backendUrl: testBackendUrl,
-                // logging: console.log,
-                // accessToken: "", // if saved
             });
+
             expect(pushMeInstance.backendUrl).to.exist.and.equal(testBackendUrl);
         });
     });
