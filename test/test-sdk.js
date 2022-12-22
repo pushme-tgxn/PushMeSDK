@@ -51,12 +51,12 @@ describe("PushMeSDK", function () {
             }
         });
 
-        it("error: ServerError unauthorized error // includes server response", async () => {
+        it("error: UnauthorizedError unauthorized error // includes server response", async () => {
             try {
                 const result = await pushMeInstance.user.getCurrentUser();
                 expect(result).to.not.exist;
             } catch (error) {
-                expect(error.name).to.exist.and.equal("ServerError");
+                expect(error.name).to.exist.and.equal("UnauthorizedError");
                 expect(error.message).to.exist.and.equal("unauthorized");
                 expect(error.code).to.exist.and.equal(401);
             }
