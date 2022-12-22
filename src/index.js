@@ -122,8 +122,8 @@ export default class APIService {
                 this._log("_apiError", error.response.status);
                 throw new APIError(error.message, error.response.data, error.response.status);
             } else {
-                this._log("_apiError", error.message, error.cause.code);
-                throw new APIError(error.message, false, error.cause.code);
+                this._log("_apiError", error.message, error.code);
+                throw new APIError(error.message, false, error.code);
             }
         }
     }
