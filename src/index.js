@@ -54,10 +54,6 @@ export default class APIService {
         return this.backendUrl;
     }
 
-    isDefaultBackend() {
-        return this.backendUrl === BACKEND_URL;
-    }
-
     resetBackend() {
         this.backendUrl = BACKEND_URL;
     }
@@ -105,20 +101,30 @@ export default class APIService {
 
             return jsonResponse;
         } catch (error) {
-            // if there is a unauthorized response (401)
-            if (error.response && error.response.status === 401) {
-                this._log("_unauthorizedError", error.response.status, error.response.data.message);
-                throw new UnauthorizedError(error.response.data.message, error.response.data, error.response.status);
-            }
+            // if there is a response
+            if (error.response && error.response.status) {
+                // if there is a unauthorized response (401)
+                if (error.response && error.response.status && error.response.status === 401) {
+                    this._log("_unauthorizedError", error.response.status, error.response.data.message);
+                    throw new UnauthorizedError(
+                        error.response.data.message,
+                        error.response.data,
+                        error.response.status
+                    );
+                }
 
-            // if there is any other response error
-            if (error.response && error.response.data && error.response.data.message) {
-                this._log("_serverError", error.response.status, error.response.data.message);
-                throw new ServerError(error.response.data.message, error.response.data, error.response.status);
-            }
+                // if there is any other response error
+                if (error.response && error.response.data && error.response.data.message) {
+                    this._log("_serverError", error.response.status, error.response.data.message);
+                    throw new ServerError(error.response.data.message, error.response.data, error.response.status);
+                }
 
-            this._log("_apiError", error.response.status);
-            throw new APIError(error.message, error.response.data, error.response.status);
+                this._log("_apiError", error.response.status);
+                throw new APIError(error.message, error.response.data, error.response.status);
+            } else {
+                this._log("_apiError", error.message, error.cause.code);
+                throw new APIError(error.message, false, error.cause.code);
+            }
         }
     }
 }
