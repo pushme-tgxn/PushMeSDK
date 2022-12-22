@@ -51,12 +51,12 @@ describe("PushMeSDK", function () {
             }
         });
 
-        it("error: ServerError unauthorized error // includes server response", async () => {
+        it("error: UnauthorizedError unauthorized error // includes server response", async () => {
             try {
                 const result = await pushMeInstance.user.getCurrentUser();
                 expect(result).to.not.exist;
             } catch (error) {
-                expect(error.name).to.exist.and.equal("ServerError");
+                expect(error.name).to.exist.and.equal("UnauthorizedError");
                 expect(error.message).to.exist.and.equal("unauthorized");
                 expect(error.code).to.exist.and.equal(401);
             }
@@ -160,206 +160,206 @@ describe("PushMeSDK", function () {
         });
     });
 
-    let createdDeviceId;
-    describe("Device Service", function () {
-        const fakeDeviceKey = faker.datatype.uuid();
-        const fakeExpoToken = `ExponentPushToken[${faker.lorem.slug()}]`;
-        const fakeNativeToken = {
-            type: "android",
-            data: faker.datatype.uuid(),
-        };
+    // let createdDeviceId;
+    // describe("Device Service", function () {
+    //     const fakeDeviceKey = faker.datatype.uuid();
+    //     const fakeExpoToken = `ExponentPushToken[${faker.lorem.slug()}]`;
+    //     const fakeNativeToken = {
+    //         type: "android",
+    //         data: faker.datatype.uuid(),
+    //     };
 
-        it("can create device", async () => {
-            const result = await pushMeInstance.device.create({
-                deviceKey: fakeDeviceKey,
-                token: fakeExpoToken,
-                nativeToken: fakeNativeToken,
-            });
+    //     it("can create device", async () => {
+    //         const result = await pushMeInstance.device.create({
+    //             deviceKey: fakeDeviceKey,
+    //             token: fakeExpoToken,
+    //             nativeToken: fakeNativeToken,
+    //         });
 
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.device).to.exist;
-            expect(result.device.id).to.exist;
-            expect(result.device.deviceKey).to.exist.and.equal(fakeDeviceKey);
-            expect(result.device.token).to.exist.and.equal(fakeExpoToken);
-            expect(result.device.nativeToken).to.exist.and.equal(JSON.stringify(fakeNativeToken));
+    //         expect(result.success).to.exist.and.equal(true);
+    //         expect(result.device).to.exist;
+    //         expect(result.device.id).to.exist;
+    //         expect(result.device.deviceKey).to.exist.and.equal(fakeDeviceKey);
+    //         expect(result.device.token).to.exist.and.equal(fakeExpoToken);
+    //         expect(result.device.nativeToken).to.exist.and.equal(JSON.stringify(fakeNativeToken));
 
-            createdDeviceId = result.device.id;
-        });
+    //         createdDeviceId = result.device.id;
+    //     });
 
-        it("can list devices", async () => {
-            const result = await pushMeInstance.device.list();
+    //     it("can list devices", async () => {
+    //         const result = await pushMeInstance.device.list();
 
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.devices).to.exist;
-            expect(result.devices.length).to.exist.and.equal(1);
-            expect(result.devices[0].deviceKey).to.exist.and.equal(fakeDeviceKey);
-        });
+    //         expect(result.success).to.exist.and.equal(true);
+    //         expect(result.devices).to.exist;
+    //         expect(result.devices.length).to.exist.and.equal(1);
+    //         expect(result.devices[0].deviceKey).to.exist.and.equal(fakeDeviceKey);
+    //     });
 
-        it("can update device", async () => {
-            const result = await pushMeInstance.device.update(fakeDeviceKey, {
-                name: "Test Device",
-            });
+    //     it("can update device", async () => {
+    //         const result = await pushMeInstance.device.update(fakeDeviceKey, {
+    //             name: "Test Device",
+    //         });
 
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.device).to.exist;
-        });
+    //         expect(result.success).to.exist.and.equal(true);
+    //         expect(result.device).to.exist;
+    //     });
 
-        it("can get device details", async () => {
-            const result = await pushMeInstance.device.getById(createdDeviceId);
+    //     it("can get device details", async () => {
+    //         const result = await pushMeInstance.device.getById(createdDeviceId);
 
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.device).to.exist;
-            expect(result.device.id).to.exist;
-            expect(result.device.name).to.exist.and.equal("Test Device");
-            expect(result.device.deviceKey).to.exist.and.equal(fakeDeviceKey);
-            expect(result.device.token).to.exist.and.equal(fakeExpoToken);
-            expect(result.device.nativeToken).to.exist.and.equal(JSON.stringify(fakeNativeToken));
-        });
-    });
+    //         expect(result.success).to.exist.and.equal(true);
+    //         expect(result.device).to.exist;
+    //         expect(result.device.id).to.exist;
+    //         expect(result.device.name).to.exist.and.equal("Test Device");
+    //         expect(result.device.deviceKey).to.exist.and.equal(fakeDeviceKey);
+    //         expect(result.device.token).to.exist.and.equal(fakeExpoToken);
+    //         expect(result.device.nativeToken).to.exist.and.equal(JSON.stringify(fakeNativeToken));
+    //     });
+    // });
 
-    let topicId, topicKey, topicSecret;
-    describe("Topic Service", function () {
-        it("can create topic", async () => {
-            const result = await pushMeInstance.topic.create({
-                deviceIds: [createdDeviceId],
-            });
+    // let topicId, topicKey, topicSecret;
+    // describe("Topic Service", function () {
+    //     it("can create topic", async () => {
+    //         const result = await pushMeInstance.topic.create({
+    //             deviceIds: [createdDeviceId],
+    //         });
 
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.topic).to.exist;
-            expect(result.topic.id).to.exist;
-            expect(result.topic.topicKey).to.exist;
-            expect(result.topic.secretKey).to.exist;
+    //         expect(result.success).to.exist.and.equal(true);
+    //         expect(result.topic).to.exist;
+    //         expect(result.topic.id).to.exist;
+    //         expect(result.topic.topicKey).to.exist;
+    //         expect(result.topic.secretKey).to.exist;
 
-            topicId = result.topic.id;
-            topicKey = result.topic.topicKey;
-            topicSecret = result.topic.secretKey;
-        });
+    //         topicId = result.topic.id;
+    //         topicKey = result.topic.topicKey;
+    //         topicSecret = result.topic.secretKey;
+    //     });
 
-        it("can get topic details", async () => {
-            const result = await pushMeInstance.topic.getById(topicId);
+    //     it("can get topic details", async () => {
+    //         const result = await pushMeInstance.topic.getById(topicId);
 
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.topic).to.exist;
-            expect(result.topic.id).to.exist.and.equal(topicId);
-            expect(result.topic.topicKey).to.exist.and.equal(topicKey);
-            expect(result.topic.secretKey).to.exist.and.equal(topicSecret);
-        });
+    //         expect(result.success).to.exist.and.equal(true);
+    //         expect(result.topic).to.exist;
+    //         expect(result.topic.id).to.exist.and.equal(topicId);
+    //         expect(result.topic.topicKey).to.exist.and.equal(topicKey);
+    //         expect(result.topic.secretKey).to.exist.and.equal(topicSecret);
+    //     });
 
-        it("can get all topics", async () => {
-            const result = await pushMeInstance.topic.list();
+    //     it("can get all topics", async () => {
+    //         const result = await pushMeInstance.topic.list();
 
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.topics).to.exist;
-            expect(result.topics.length).to.exist.and.equal(1);
-            expect(result.topics[0].topicKey).to.exist.and.equal(topicKey);
-            expect(result.topics[0].secretKey).to.exist.and.equal(topicSecret);
-        });
+    //         expect(result.success).to.exist.and.equal(true);
+    //         expect(result.topics).to.exist;
+    //         expect(result.topics.length).to.exist.and.equal(1);
+    //         expect(result.topics[0].topicKey).to.exist.and.equal(topicKey);
+    //         expect(result.topics[0].secretKey).to.exist.and.equal(topicSecret);
+    //     });
 
-        it("can update topic", async () => {
-            const result = await pushMeInstance.topic.update(topicId, {
-                name: "Test Topic",
-                deviceIds: [createdDeviceId],
-            });
+    //     it("can update topic", async () => {
+    //         const result = await pushMeInstance.topic.update(topicId, {
+    //             name: "Test Topic",
+    //             deviceIds: [createdDeviceId],
+    //         });
 
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.topic).to.exist;
-            expect(result.topic.id).to.exist.and.equal(topicId);
-            expect(result.topic.topicKey).to.exist.and.equal(topicKey);
-            expect(result.topic.secretKey).to.exist.and.equal(topicSecret);
+    //         expect(result.success).to.exist.and.equal(true);
+    //         expect(result.topic).to.exist;
+    //         expect(result.topic.id).to.exist.and.equal(topicId);
+    //         expect(result.topic.topicKey).to.exist.and.equal(topicKey);
+    //         expect(result.topic.secretKey).to.exist.and.equal(topicSecret);
 
-            expect(result.topic.name).to.exist.and.equal("Test Topic");
-        });
-    });
+    //         expect(result.topic.name).to.exist.and.equal("Test Topic");
+    //     });
+    // });
 
-    describe("Push Service", function () {
-        let sentPushIdent;
+    // describe("Push Service", function () {
+    //     let sentPushIdent;
 
-        // pushing and responses shoudl be available without authentication
-        const unauthenticatedInstance = getNewInstance();
+    //     // pushing and responses shoudl be available without authentication
+    //     const unauthenticatedInstance = getNewInstance();
 
-        it("sends a push", async () => {
-            const result = await unauthenticatedInstance.push.pushToTopic(topicSecret, {
-                categoryId: "default",
-                title: "Test Push",
-                body: "This is a test push",
-                data: {
-                    test: "data",
-                },
-            });
+    //     it("sends a push", async () => {
+    //         const result = await unauthenticatedInstance.push.pushToTopic(topicSecret, {
+    //             categoryId: "default",
+    //             title: "Test Push",
+    //             body: "This is a test push",
+    //             data: {
+    //                 test: "data",
+    //             },
+    //         });
 
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.pushIdent).to.exist;
+    //         expect(result.success).to.exist.and.equal(true);
+    //         expect(result.pushIdent).to.exist;
 
-            sentPushIdent = result.pushIdent;
-        });
+    //         sentPushIdent = result.pushIdent;
+    //     });
 
-        it("can get push details", async () => {
-            const result = await unauthenticatedInstance.push.getPushStatus(sentPushIdent);
+    //     it("can get push details", async () => {
+    //         const result = await unauthenticatedInstance.push.getPushStatus(sentPushIdent);
 
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.pushData).to.exist;
-            expect(result.pushData.categoryId).to.exist.and.equal("default");
-            expect(result.pushData.title).to.exist.and.equal("Test Push");
-            expect(result.pushData.body).to.exist.and.equal("This is a test push");
-        });
+    //         expect(result.success).to.exist.and.equal(true);
+    //         expect(result.pushData).to.exist;
+    //         expect(result.pushData.categoryId).to.exist.and.equal("default");
+    //         expect(result.pushData.title).to.exist.and.equal("Test Push");
+    //         expect(result.pushData.body).to.exist.and.equal("This is a test push");
+    //     });
 
-        it("can respond to push", async () => {
-            const result = await unauthenticatedInstance.push.respondToPush(sentPushIdent, {
-                // pushIdent: sentPushIdent,
-                // pushId: response.notification.request.content.data.pushId,
-                categoryIdentifier: "button.submit", // catgry of notification
-                actionIdentifier: "submit", // action that was taken
-                responseText: "hello", // extra text
-            });
+    //     it("can respond to push", async () => {
+    //         const result = await unauthenticatedInstance.push.respondToPush(sentPushIdent, {
+    //             // pushIdent: sentPushIdent,
+    //             // pushId: response.notification.request.content.data.pushId,
+    //             categoryIdentifier: "button.submit", // catgry of notification
+    //             actionIdentifier: "submit", // action that was taken
+    //             responseText: "hello", // extra text
+    //         });
 
-            expect(result.success).to.exist.and.equal(true);
-            // expect(result.pushData).to.exist;
-        });
+    //         expect(result.success).to.exist.and.equal(true);
+    //         // expect(result.pushData).to.exist;
+    //     });
 
-        it("can get push details", async () => {
-            const result = await unauthenticatedInstance.push.getPushStatus(sentPushIdent);
+    //     it("can get push details", async () => {
+    //         const result = await unauthenticatedInstance.push.getPushStatus(sentPushIdent);
 
-            expect(result.success).to.exist.and.equal(true);
-            expect(result.pushData).to.exist;
-            expect(result.firstValidResponse.categoryIdentifier).to.exist.and.equal("button.submit");
-            expect(result.firstValidResponse.actionIdentifier).to.exist.and.equal("submit");
-            expect(result.firstValidResponse.responseText).to.exist.and.equal("hello");
-        });
-    });
+    //         expect(result.success).to.exist.and.equal(true);
+    //         expect(result.pushData).to.exist;
+    //         expect(result.firstValidResponse.categoryIdentifier).to.exist.and.equal("button.submit");
+    //         expect(result.firstValidResponse.actionIdentifier).to.exist.and.equal("submit");
+    //         expect(result.firstValidResponse.responseText).to.exist.and.equal("hello");
+    //     });
+    // });
 
-    describe("Trio Push Service", function () {
-        // pushing and responses shoudl be available without authentication
-        const unauthenticatedInstance = getNewInstance();
+    // describe("Trio Push Service", function () {
+    //     // pushing and responses shoudl be available without authentication
+    //     const unauthenticatedInstance = getNewInstance();
 
-        it("can ping service", async () => {
-            const result = await unauthenticatedInstance.trio.ping();
+    //     it("can ping service", async () => {
+    //         const result = await unauthenticatedInstance.trio.ping();
 
-            expect(result.stat).to.exist.and.equal("OK");
-            expect(result.response.time).to.exist;
+    //         expect(result.stat).to.exist.and.equal("OK");
+    //         expect(result.response.time).to.exist;
 
-            // this will allow authentication with secret instead of signature
-            expect(result.response.validation).to.exist.and.equal("skipped");
-        });
+    //         // this will allow authentication with secret instead of signature
+    //         expect(result.response.validation).to.exist.and.equal("skipped");
+    //     });
 
-        let authDeviceIdent;
-        it("can preauth (get device ident)", async () => {
-            const result = await unauthenticatedInstance.trio.preAuth(topicKey, topicSecret);
+    //     let authDeviceIdent;
+    //     it("can preauth (get device ident)", async () => {
+    //         const result = await unauthenticatedInstance.trio.preAuth(topicKey, topicSecret);
 
-            expect(result.stat).to.exist.and.equal("OK");
-            expect(result.response.devices).to.exist;
-            expect(result.response.devices[0].device).to.exist;
+    //         expect(result.stat).to.exist.and.equal("OK");
+    //         expect(result.response.devices).to.exist;
+    //         expect(result.response.devices[0].device).to.exist;
 
-            authDeviceIdent = result.response.devices[0].device;
-        });
+    //         authDeviceIdent = result.response.devices[0].device;
+    //     });
 
-        // wait for timeout
-        it("can auth", async () => {
-            const result = await unauthenticatedInstance.trio.auth(topicKey, topicSecret, authDeviceIdent);
+    //     // wait for timeout
+    //     it("can auth", async () => {
+    //         const result = await unauthenticatedInstance.trio.auth(topicKey, topicSecret, authDeviceIdent);
 
-            expect(result.stat).to.exist.and.equal("OK");
+    //         expect(result.stat).to.exist.and.equal("OK");
 
-            expect(result.response.result).to.exist.and.equal("deny");
-            expect(result.serviceData.actionIdentifier).to.exist.and.equal("noresponse");
-        }).timeout(35000);
-    });
+    //         expect(result.response.result).to.exist.and.equal("deny");
+    //         expect(result.serviceData.actionIdentifier).to.exist.and.equal("noresponse");
+    //     }).timeout(35000);
+    // });
 });
