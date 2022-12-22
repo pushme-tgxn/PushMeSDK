@@ -11,8 +11,8 @@ export default class TopicService {
         return this.apiService._callApi(`/topic/${topicId}`, "GET");
     }
 
-    create() {
-        return this.apiService._callApi(`/topic`, "POST");
+    create(topicData) {
+        return this.apiService._callApi(`/topic`, "POST", topicData);
     }
 
     update(topicId, updateData) {

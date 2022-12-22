@@ -4,6 +4,16 @@ import { faker } from "@faker-js/faker"; // https://www.npmjs.com/package/@faker
 
 import PushMe, { BACKEND_URL } from "../src/index.js";
 
+const errorMessages = {
+    emailpasswordIncorrect: "email or password is incorrect",
+    passwordIsRequired: "password is required",
+    emailIsRequired: "email is required",
+    emailMethodNotFound: "email method not found",
+    emailAlreadyRegistered: "email already registered",
+    emailNotChanged: "email not changed",
+    userNotFound: "user not found",
+};
+
 describe("PushMeSDK", function () {
     let pushMeInstance;
 
@@ -12,6 +22,7 @@ describe("PushMeSDK", function () {
     const getNewInstance = (config) => {
         return new PushMe({
             ...config,
+            logging: console.log,
             backendUrl: testBackendUrl,
         });
     };
@@ -27,6 +38,28 @@ describe("PushMeSDK", function () {
             pushMeInstance = getNewInstance();
 
             expect(pushMeInstance.backendUrl).to.exist.and.equal(testBackendUrl);
+        });
+
+        it("error: APIError 404 not found // includes code and message on error", async () => {
+            try {
+                const result = await pushMeInstance._callApi(`/fakepath`, "GET");
+                expect(result).to.not.exist;
+            } catch (error) {
+                expect(error.name).to.exist.and.equal("APIError");
+                expect(error.message).to.exist.and.equal("Request failed with status code 404");
+                expect(error.code).to.exist.and.equal(404);
+            }
+        });
+
+        it("error: ServerError unauthorized error // includes server response", async () => {
+            try {
+                const result = await pushMeInstance.user.getCurrentUser();
+                expect(result).to.not.exist;
+            } catch (error) {
+                expect(error.name).to.exist.and.equal("ServerError");
+                expect(error.message).to.exist.and.equal("unauthorized");
+                expect(error.code).to.exist.and.equal(401);
+            }
         });
     });
 
@@ -76,12 +109,36 @@ describe("PushMeSDK", function () {
             expect(result.success).to.exist.and.equal(true);
             expect(result.userId).to.exist.and.equal(testUserId);
         });
+        it("error: ServerError can't update invalid email", async () => {
+            try {
+                const result = await pushMeInstance.user.updateEmail("");
+                expect(result).to.not.exist;
+            } catch (error) {
+                expect(error.name).to.exist.and.equal("ServerError");
+
+                console.log(error.message);
+
+                expect(error.code).to.exist.and.equal(400);
+                expect(error.message).to.exist.and.equal(errorMessages.emailIsRequired);
+            }
+        });
 
         it("can update password", async () => {
             const result = await pushMeInstance.user.updatePassword(newPassword);
 
             expect(result.success).to.exist.and.equal(true);
             expect(result.userId).to.exist.and.equal(testUserId);
+        });
+        it("error: ServerError can't update invalid password", async () => {
+            try {
+                const result = await pushMeInstance.user.updatePassword("");
+                expect(result).to.not.exist;
+            } catch (error) {
+                expect(error.name).to.exist.and.equal("ServerError");
+
+                expect(error.code).to.exist.and.equal(400);
+                expect(error.message).to.exist.and.equal(errorMessages.passwordIsRequired);
+            }
         });
 
         it("can get new user details", async () => {

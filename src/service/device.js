@@ -15,8 +15,8 @@ export default class DeviceService {
         return this.apiService._callApi("/device/create", "POST", deviceData);
     }
 
-    update(deviceKey, deviceData) {
-        return this.apiService._callApi(`/device/${deviceKey}`, "POST", deviceData);
+    update(deviceKey, updateData) {
+        return this.apiService._callApi(`/device/${deviceKey}`, "POST", updateData);
     }
 
     delete(deviceId) {
