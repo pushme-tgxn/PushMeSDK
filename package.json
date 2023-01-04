@@ -9,37 +9,35 @@
     ],
     "version": "1.6.12",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
+    "main": "./src/index.js",
+    "type": "module",
     "scripts": {
-        "test": "mocha test/test-sdk-cjs.js",
-        "test-esm": "mocha -r esm test/test-sdk.js",
-        "coverage": "nyc mocha",
-        "build-cjs": "npx babel src --out-dir cjs",
-        "prepublish": "npm run bundle",
-        "bundle": "rollup --config rollup.config.js --bundleConfigAsCjs"
+        "bundle": "rollup -c",
+        "test": "run-s -n test-cjs test-esm",
+        "test-cjs": "mocha test/test-sdk-cjs.cjs",
+        "test-esm": "mocha test/test-sdk-esm.js",
+        "coverage-cjs": "nyc mocha test/test-sdk-cjs.cjs",
+        "coverage-esm": "nyc mocha test/test-sdk-esm.js",
+        "coverage": "run-s -n cvr-test-cjs cvr-test-esm"
     },
     "exports": {
         "import": "./src/index.js",
-        "require": "./dist/index.js"
+        "require": "./cjs/index.cjs"
     },
     "files": [
         "src/**",
-        "dist/**"
+        "cjs/**"
     ],
     "license": "MIT",
     "dependencies": {
         "axios": "^1.2.2"
     },
     "devDependencies": {
-        "@babel/cli": "^7.20.7",
-        "@babel/core": "^7.20.7",
-        "@babel/preset-env": "^7.20.2",
         "@faker-js/faker": "^7.6.0",
-        "babel-plugin-add-module-exports": "^1.0.4",
         "chai": "^4.3.7",
         "mocha": "^10.2.0",
         "nyc": "^15.1.0",
         "prettier": "^2.8.1",
-        "rollup": "^3.9.1",
-        "tsup": "^6.5.0"
+        "rollup": "^3.9.1"
     }
 }

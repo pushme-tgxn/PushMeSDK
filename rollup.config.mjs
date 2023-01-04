@@ -3,9 +3,9 @@ export default {
     output: {
         // file: "bundle.js",
         format: "cjs",
-        dir: "dist",
+        dir: "cjs",
         exports: "named",
-        interop: "compat",
+        entryFileNames: "[name].cjs",
         esModule: false,
         preserveModules: true, // Keep directory structure and files
     },

@@ -1,15 +1,8 @@
-const { expect } = require("chai");
+import { expect } from "chai";
 
-const { faker } = require("@faker-js/faker");
+import { faker } from "@faker-js/faker"; // https://www.npmjs.com/package/@faker-js/faker
 
-const {
-    default: PushMeSDK,
-    BACKEND_URL,
-    NotificationDefinitions,
-    APIError,
-    ServerError,
-    UnauthorizedError,
-} = require("../dist/index.js");
+import PushMeSDK, { BACKEND_URL } from "../src/index.js";
 
 const errorMessages = {
     emailpasswordIncorrect: "email or password is incorrect",
