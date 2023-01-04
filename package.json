@@ -13,7 +13,7 @@
     "module": "./mjs/index.mjs",
     "scripts": {
         "bundle": "rollup -c",
-        "postbundle": "cp src/index.d.js mjs/index.d.js",
+        "postbundle": "cp ./src/index.d.ts ./mjs/index.d.ts",
         "test": "run-s -n test-cjs test-esm",
         "test-cjs": "mocha test/test-sdk-cjs.cjs",
         "test-esm": "mocha test/test-sdk-esm.mjs",
