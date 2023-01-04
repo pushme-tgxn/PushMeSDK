@@ -26,20 +26,23 @@ export default class APIService {
         // "Trio" to avoid *confusion* with another well-known company
         this.trio = new TrioService(this);
 
-        if (config.backendUrl) {
-            this.setBackendUrl(config.backendUrl);
-        }
+        // if config is specified
+        if (config) {
+            if (config.backendUrl) {
+                this.setBackendUrl(config.backendUrl);
+            }
 
-        if (config.accessToken) {
-            this.setAccessToken(config.accessToken);
-        }
+            if (config.accessToken) {
+                this.setAccessToken(config.accessToken);
+            }
 
-        if (config.logging) {
-            this.logger = config.logging;
+            if (config.logging) {
+                this.logger = config.logging;
 
-            // allow setting to true to log it
-            if (config.logging === true) {
-                this.logger = this._log;
+                // allow setting to true to log it
+                if (config.logging === true) {
+                    this.logger = this._log;
+                }
             }
         }
     }
