@@ -23,6 +23,6 @@ export default class PushService {
     }
 
     longPollPushStatus(pushIdent) {
-        return this.apiService._callApi(`/push/${pushIdent}/status`, "GET", {}, { timeout: POLLING_TIMEOUT });
+        return this.apiService._callApi(`/push/${pushIdent}/poll`, "GET", {}, { timeout: POLLING_TIMEOUT });
     }
 }

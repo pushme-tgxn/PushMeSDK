@@ -3,7 +3,7 @@ declare module '@pushme-tgxn/pushmesdk';
 export declare const BACKEND_URL: string;
 export declare const NotificationDefinitions: object;
 
-export declare class PushMe {
+export declare class PushMeSDK {
     constructor(config?: object);
     public user: User;
     public topic: Topic;
@@ -16,7 +16,7 @@ export declare class PushMe {
 }
 
 export declare class User {
-    constructor(pushMe: PushMe);
+    constructor(pushMe: PushMeSDK);
     public emailRegister(email: string, password: string, name: string): Promise<any>;
     public emailLogin(email: string, password: string): Promise<any>;
     public updateEmail(email: string): Promise<any>;
@@ -28,7 +28,7 @@ export declare class User {
 }
 
 export declare class Topic {
-    constructor(pushMe: PushMe);
+    constructor(pushMe: PushMeSDK);
     public list(): Promise<any>;
     public getById(topicId: string): Promise<any>;
     public create(): Promise<any>;
@@ -37,7 +37,7 @@ export declare class Topic {
 }
 
 export declare class Device {
-    constructor(pushMe: PushMe);
+    constructor(pushMe: PushMeSDK);
     public list(): Promise<any>;
     public getById(deviceId: string): Promise<any>;
     public create(deviceData: any): Promise<any>;
