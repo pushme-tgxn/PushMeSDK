@@ -21,7 +21,7 @@ jobs:
       - run: npm ci
 
       # build commonjs plugin
-      - run: npm run build-cjs
+      - run: npm run bundle
 
       - run: npm publish --access public
         env:
@@ -44,6 +44,9 @@ jobs:
 
       - run: npm ci
 
+      # build commonjs plugin
+      - run: npm run bundle
+      
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -7,10 +7,11 @@
         "console",
         "sdk"
     ],
-    "version": "1.6.10",
+    "version": "1.6.11",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
     "scripts": {
-        "test": "mocha",
+        "test": "mocha test/test-sdk-cjs.js",
+        "test-esm": "mocha -r esm test/test-sdk.js",
         "coverage": "nyc mocha",
         "build-cjs": "npx babel src --out-dir cjs",
         "prepublish": "npm run bundle",

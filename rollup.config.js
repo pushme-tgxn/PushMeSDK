@@ -5,6 +5,8 @@ export default {
         format: "cjs",
         dir: "dist",
         exports: "named",
+        interop: "compat",
+        esModule: false,
         preserveModules: true, // Keep directory structure and files
     },
     external: ["axios"],

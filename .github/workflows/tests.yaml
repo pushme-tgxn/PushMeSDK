@@ -32,5 +32,11 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Run All Node.js Tests
+      - name: Run All Node.js ESM Tests
+        run: npm run test-esm
+
+      - name: Bundle CJS
+        run: npm run bundle
+
+      - name: Run All Node.js CJS Tests
         run: npm run test
