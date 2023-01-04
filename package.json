@@ -7,7 +7,7 @@
         "console",
         "sdk"
     ],
-    "version": "1.6.11",
+    "version": "1.6.12",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
     "scripts": {
         "test": "mocha test/test-sdk-cjs.js",
