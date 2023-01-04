@@ -7,12 +7,13 @@
         "console",
         "sdk"
     ],
-    "version": "1.6.13",
+    "version": "1.6.14",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
     "main": "./cjs/index.cjs",
     "module": "./mjs/index.mjs",
     "scripts": {
         "bundle": "rollup -c",
+        "postbundle": "cp src/index.d.js mjs/index.d.js",
         "test": "run-s -n test-cjs test-esm",
         "test-cjs": "mocha test/test-sdk-cjs.cjs",
         "test-esm": "mocha test/test-sdk-esm.mjs",

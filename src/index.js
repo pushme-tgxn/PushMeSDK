@@ -100,7 +100,7 @@ export default class APIService {
             this._log("_apiResponse", fetchResponse.data);
 
             const jsonResponse = fetchResponse.data;
-            console.log("jsonResponse", jsonResponse);
+            this._log("jsonResponse", jsonResponse);
 
             return jsonResponse;
         } catch (error) {
