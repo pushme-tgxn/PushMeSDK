@@ -7,14 +7,14 @@
         "console",
         "sdk"
     ],
-    "version": "1.6.9",
+    "version": "1.6.10",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
     "scripts": {
         "test": "mocha",
         "coverage": "nyc mocha",
         "build-cjs": "npx babel src --out-dir cjs",
         "prepublish": "npm run bundle",
-        "bundle": "npx --yes mkdist . --pattern=** --format=cjs --ext=js"
+        "bundle": "rollup --config rollup.config.js --bundleConfigAsCjs"
     },
     "exports": {
         "import": "./src/index.js",
@@ -38,6 +38,7 @@
         "mocha": "^10.2.0",
         "nyc": "^15.1.0",
         "prettier": "^2.8.1",
+        "rollup": "^3.9.1",
         "tsup": "^6.5.0"
     }
 }

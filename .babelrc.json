@@ -3,8 +3,10 @@
         [
             "@babel/preset-env",
             {
-                "modules": "commonjs"
+                "modules": "commonjs",
+                "targets": "node 14.0"
             }
         ]
-    ]
+    ],
+    "plugins": ["add-module-exports"]
 }
