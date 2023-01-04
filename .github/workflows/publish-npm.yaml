@@ -20,6 +20,9 @@ jobs:
 
       - run: npm ci
 
+      # build commonjs plugin
+      - run: npm run build-cjs
+
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
