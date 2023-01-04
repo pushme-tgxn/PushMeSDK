@@ -7,12 +7,13 @@
         "console",
         "sdk"
     ],
-    "version": "1.6.7",
+    "version": "1.6.8",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
     "scripts": {
         "test": "mocha",
         "coverage": "nyc mocha",
-        "build-cjs": "babel --plugins @babel/plugin-transform-modules-commonjs src --out-dir cjs"
+        "build-cjs": "babel src --out-dir cjs",
+        "prepublish": "npm run build-cjs"
     },
     "exports": {
         "import": "./src/index.js",
@@ -29,9 +30,8 @@
     "devDependencies": {
         "@babel/cli": "^7.20.7",
         "@babel/core": "^7.20.7",
-        "@babel/plugin-transform-modules-commonjs": "^7.20.11",
+        "@babel/preset-env": "^7.20.2",
         "@faker-js/faker": "^7.6.0",
-        "babel": "^6.23.0",
         "chai": "^4.3.7",
         "mocha": "^10.2.0",
         "nyc": "^15.1.0",
