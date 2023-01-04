@@ -1,4 +1,8 @@
+# development
 node_modules/
 .nyc_output/
 coverage/
-dist/
+
+# bundles
+cjs/
+mjs/

@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import { faker } from "@faker-js/faker"; // https://www.npmjs.com/package/@faker-js/faker
 
-import PushMeSDK, { BACKEND_URL } from "../src/index.js";
+import PushMeSDK, { BACKEND_URL } from "../mjs/index.mjs";
 
 const errorMessages = {
     emailpasswordIncorrect: "email or password is incorrect",

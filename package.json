@@ -7,25 +7,27 @@
         "console",
         "sdk"
     ],
-    "version": "1.6.12",
+    "version": "1.6.13",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
-    "main": "./src/index.js",
-    "type": "module",
+    "main": "./cjs/index.cjs",
+    "module": "./mjs/index.mjs",
     "scripts": {
         "bundle": "rollup -c",
         "test": "run-s -n test-cjs test-esm",
         "test-cjs": "mocha test/test-sdk-cjs.cjs",
-        "test-esm": "mocha test/test-sdk-esm.js",
+        "test-esm": "mocha test/test-sdk-esm.mjs",
         "coverage-cjs": "nyc mocha test/test-sdk-cjs.cjs",
-        "coverage-esm": "nyc mocha test/test-sdk-esm.js",
-        "coverage": "run-s -n cvr-test-cjs cvr-test-esm"
+        "coverage-esm": "nyc mocha test/test-sdk-esm.mjs",
+        "coverage": "run-s -n coverage-cjs coverage-esm"
     },
     "exports": {
-        "import": "./src/index.js",
-        "require": "./cjs/index.cjs"
+        ".": {
+            "require": "./cjs/index.cjs",
+            "default": "./mjs/index.mjs"
+        }
     },
     "files": [
-        "src/**",
+        "mjs/**",
         "cjs/**"
     ],
     "license": "MIT",
@@ -36,6 +38,7 @@
         "@faker-js/faker": "^7.6.0",
         "chai": "^4.3.7",
         "mocha": "^10.2.0",
+        "npm-run-all": "^4.1.5",
         "nyc": "^15.1.0",
         "prettier": "^2.8.1",
         "rollup": "^3.9.1"

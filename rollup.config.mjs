@@ -1,14 +1,27 @@
+const baseConfig = {
+    exports: "named",
+    esModule: false,
+    preserveModules: true,
+};
+
 export default {
     input: "src/index.js",
-    output: {
-        // file: "bundle.js",
-        format: "cjs",
-        dir: "cjs",
-        exports: "named",
-        entryFileNames: "[name].cjs",
-        esModule: false,
-        preserveModules: true, // Keep directory structure and files
-    },
+    output: [
+        {
+            format: "cjs",
+            entryFileNames: "[name].cjs",
+            dir: "cjs",
+
+            ...baseConfig,
+        },
+        ,
+        {
+            format: "es",
+            entryFileNames: "[name].mjs",
+            dir: "mjs",
+
+            ...baseConfig,
+        },
+    ],
     external: ["axios"],
-    // chunkFileNames: "chunks/[name].js",
 };
