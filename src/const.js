@@ -14,16 +14,16 @@ export const NotificationDefinitions = {
         sendDefaultAction: false, // dont send a default action when the notification is tapped
         actions: [
             {
+                title: "Approve",
                 identifier: "approve",
-                buttonTitle: "Approve",
                 options: {
                     opensAppToForeground: false,
                     isAuthenticationRequired: false,
                 },
             },
             {
+                title: "Deny",
                 identifier: "deny",
-                buttonTitle: "Deny",
                 options: {
                     opensAppToForeground: false,
                     isAuthenticationRequired: false,
@@ -36,16 +36,16 @@ export const NotificationDefinitions = {
         sendDefaultAction: false, // dont send a default action when the notification is tapped
         actions: [
             {
+                title: "Yes",
                 identifier: "yes",
-                buttonTitle: "Yes",
                 options: {
                     opensAppToForeground: false,
                     isAuthenticationRequired: false,
                 },
             },
             {
+                title: "No",
                 identifier: "no",
-                buttonTitle: "No",
                 options: {
                     opensAppToForeground: false,
                     isAuthenticationRequired: false,
@@ -58,8 +58,8 @@ export const NotificationDefinitions = {
         sendDefaultAction: false, // dont send a default action when the notification is tapped
         actions: [
             {
+                title: "Acknowledge",
                 identifier: "acknowledge",
-                buttonTitle: "Acknowledge",
                 options: {
                     opensAppToForeground: false,
                     isAuthenticationRequired: false,
@@ -72,8 +72,8 @@ export const NotificationDefinitions = {
         sendDefaultAction: true,
         actions: [
             {
+                title: "Open Link",
                 identifier: "open_link",
-                buttonTitle: "Open Link",
                 options: {
                     opensAppToForeground: false,
                     isAuthenticationRequired: false,
@@ -86,8 +86,8 @@ export const NotificationDefinitions = {
         sendDefaultAction: true,
         actions: [
             {
+                title: "Reply",
                 identifier: "reply",
-                buttonTitle: "Reply",
                 textInput: {
                     submitButtonTitle: "Reply",
                     // placeholder: "Type a reply...", // https://github.com/expo/expo/issues/20500
@@ -104,8 +104,8 @@ export const NotificationDefinitions = {
         sendDefaultAction: true,
         actions: [
             {
+                title: "Submit",
                 identifier: "submit",
-                buttonTitle: "Submit",
                 textInput: {
                     submitButtonTitle: "Submit",
                     // placeholder: "Type a message...", // https://github.com/expo/expo/issues/20500

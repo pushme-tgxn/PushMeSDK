@@ -40,6 +40,20 @@ describe("PushMeSDK", function () {
             expect(pushMeInstance.backendUrl).to.exist.and.equal(testBackendUrl);
         });
 
+        it("check getNotificationCategory", async () => {
+            const foundCategory = pushMeInstance.getNotificationCategory("button.open_link");
+
+            expect(foundCategory.title).to.exist.and.equal("Open Link Button");
+            expect(foundCategory.sendDefaultAction).to.exist.and.equal(true);
+        });
+
+        it("check getNotificationAction", async () => {
+            const foundAction = pushMeInstance.getNotificationAction("button.open_link", "open_link");
+
+            expect(foundAction.title).to.exist.and.equal("Open Link");
+            expect(foundAction.identifier).to.exist.and.equal("open_link");
+        });
+
         // axios returns non-200 / network
         it("error: APIError 404 not found // includes code and message on error", async () => {
             try {

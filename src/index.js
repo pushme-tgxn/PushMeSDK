@@ -66,6 +66,28 @@ export default class APIService {
         this.backendUrl = backendUrl;
     }
 
+    getNotificationCategory(categoryId) {
+        if (!NotificationDefinitions.hasOwnProperty(categoryId)) {
+            return false;
+        }
+
+        return NotificationDefinitions[categoryId];
+    }
+
+    getNotificationAction(categoryId, actionIdentifier) {
+        const category = this.getNotificationCategory(categoryId);
+        if (!category) {
+            return false;
+        }
+
+        const foundAction = category.actions.find((action) => action.identifier === actionIdentifier);
+        if (!foundAction) {
+            return false;
+        }
+
+        return foundAction;
+    }
+
     setAccessToken(accessToken) {
         this._log("setAccessToken", accessToken);
         this.accessToken = accessToken;
@@ -97,10 +119,9 @@ export default class APIService {
 
             this._log("_callApi", method, `${this.backendUrl}${path}`, payload);
             const fetchResponse = await axios(`${this.backendUrl}${path}`, axiosConfig);
-            this._log("_apiResponse", fetchResponse.data);
 
             const jsonResponse = fetchResponse.data;
-            this._log("jsonResponse", jsonResponse);
+            this._log("_apiResponse", jsonResponse);
 
             return jsonResponse;
         } catch (error) {
