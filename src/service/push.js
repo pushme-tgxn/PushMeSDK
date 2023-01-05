@@ -5,6 +5,10 @@ export default class PushService {
         this.apiService = apiService;
     }
 
+    history() {
+        return this.apiService._callApi("/push", "GET");
+    }
+
     pushToTopic(topicSecret, { categoryId, title, body, data }) {
         return this.apiService._callApi(`/push/${topicSecret}`, "POST", {
             categoryId,

@@ -22,7 +22,7 @@ describe("PushMeSDK", function () {
     const getNewInstance = (config) => {
         return new PushMeSDK({
             ...config,
-            logging: console.log,
+            // logging: console.log,
             backendUrl: testBackendUrl,
         });
     };
@@ -175,7 +175,7 @@ describe("PushMeSDK", function () {
             expect(result.methods[0].methodIdent).to.exist.and.equal(newEmailAddress);
         });
 
-        it("can get user push history", async () => {
+        it("DEPRECATED: can get user push history", async () => {
             const result = await pushMeInstance.user.getPushHistory();
 
             expect(result.success).to.exist.and.equal(true);
@@ -230,6 +230,7 @@ describe("PushMeSDK", function () {
                 deviceKey: fakeDeviceKey,
                 token: fakeExpoToken,
                 nativeToken: fakeNativeToken,
+                type: "ios",
             });
 
             expect(result.success).to.exist.and.equal(true);
@@ -238,6 +239,7 @@ describe("PushMeSDK", function () {
             expect(result.device.deviceKey).to.exist.and.equal(fakeDeviceKey);
             expect(result.device.token).to.exist.and.equal(fakeExpoToken);
             expect(result.device.nativeToken).to.exist.and.equal(JSON.stringify(fakeNativeToken));
+            expect(result.device.type).to.exist.and.equal("ios");
 
             createdDeviceId = result.device.id;
         });
@@ -329,6 +331,14 @@ describe("PushMeSDK", function () {
 
     describe("Push Service", function () {
         let sentPushIdent;
+
+        it("can get push history", async () => {
+            const result = await pushMeInstance.push.history();
+
+            expect(result.success).to.exist.and.equal(true);
+            expect(result.pushes).to.exist;
+            expect(result.pushes.length).to.exist.and.equal(0);
+        });
 
         // pushing and responses shoudl be available without authentication
         const unauthenticatedInstance = getNewInstance();

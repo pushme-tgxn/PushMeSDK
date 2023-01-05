@@ -7,7 +7,7 @@
         "console",
         "sdk"
     ],
-    "version": "1.7.8",
+    "version": "1.8.0",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
     "main": "./src/index.js",
     "type": "module",
