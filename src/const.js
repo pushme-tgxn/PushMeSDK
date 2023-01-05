@@ -75,7 +75,6 @@ export const NotificationDefinitions = {
                 title: "Open Link",
                 identifier: "open_link",
                 options: {
-                    opensAppToForeground: false,
                     isAuthenticationRequired: false,
                 },
             },
@@ -83,7 +82,7 @@ export const NotificationDefinitions = {
     },
     "input.reply": {
         title: "Reply Input",
-        sendDefaultAction: true,
+        sendDefaultAction: false,
         actions: [
             {
                 title: "Reply",
@@ -94,14 +93,14 @@ export const NotificationDefinitions = {
                 },
                 options: {
                     opensAppToForeground: false,
-                    // isAuthenticationRequired: false,
+                    isAuthenticationRequired: false,
                 },
             },
         ],
     },
     "input.submit": {
         title: "Submit Input",
-        sendDefaultAction: true,
+        sendDefaultAction: false,
         actions: [
             {
                 title: "Submit",
@@ -112,7 +111,7 @@ export const NotificationDefinitions = {
                 },
                 options: {
                     opensAppToForeground: false,
-                    // isAuthenticationRequired: false,
+                    isAuthenticationRequired: false,
                 },
             },
         ],
