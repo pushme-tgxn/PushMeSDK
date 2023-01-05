@@ -46,10 +46,10 @@ export default [
     {
         input: defaultInput,
         output: {
-            file: `dist/browser/index.mjs`,
+            file: `dist/node/index.mjs`,
             format: "esm",
             exports: "named",
         },
-        plugins: [json(), resolve(), commonjs()],
+        plugins: [json(), autoExternal(), resolve(), commonjs()],
     },
 ];
