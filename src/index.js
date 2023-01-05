@@ -1,4 +1,4 @@
-import { DEFAULT_TIMEOUT, BACKEND_URL, NotificationDefinitions } from "./const.js";
+import { DEFAULT_TIMEOUT, BACKEND_URL, DEFAULT_ACTION_IDENTIFIER, NotificationDefinitions } from "./const.js";
 
 import axios from "axios";
 
@@ -80,6 +80,13 @@ class APIService {
 
         const foundAction = category.actions.find((action) => action.identifier === actionIdentifier);
         if (!foundAction) {
+            if (actionIdentifier === DEFAULT_ACTION_IDENTIFIER) {
+                return {
+                    identifier: "default",
+                    title: "Default",
+                };
+            }
+
             return false;
         }
 
@@ -153,6 +160,7 @@ class APIService {
 
 APIService.BACKEND_URL = BACKEND_URL;
 APIService.NotificationDefinitions = NotificationDefinitions;
+APIService.DEFAULT_ACTION_IDENTIFIER = DEFAULT_ACTION_IDENTIFIER;
 APIService.APIError = APIError;
 APIService.ServerError = ServerError;
 APIService.UnauthorizedError = UnauthorizedError;

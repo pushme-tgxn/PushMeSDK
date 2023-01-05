@@ -54,6 +54,16 @@ describe("PushMeSDK", function () {
             expect(foundAction.identifier).to.exist.and.equal("open_link");
         });
 
+        it("check getNotificationAction DEFAULT_ACTION_IDENTIFIER", async () => {
+            const foundAction = pushMeInstance.getNotificationAction(
+                "button.open_link",
+                PushMeSDK.DEFAULT_ACTION_IDENTIFIER
+            );
+
+            expect(foundAction.title).to.exist.and.equal("Default");
+            expect(foundAction.identifier).to.exist.and.equal("default");
+        });
+
         // axios returns non-200 / network
         it("error: APIError 404 not found // includes code and message on error", async () => {
             try {

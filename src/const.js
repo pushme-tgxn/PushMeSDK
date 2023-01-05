@@ -3,6 +3,8 @@ export const BACKEND_URL = "https://pushme.tgxn.net";
 export const DEFAULT_TIMEOUT = 1000;
 export const POLLING_TIMEOUT = 60 * 1000;
 
+export const DEFAULT_ACTION_IDENTIFIER = "expo.modules.notifications.actions.DEFAULT";
+
 // `actions` docs: https://docs.expo.dev/versions/latest/sdk/notifications/#arguments-21
 export const NotificationDefinitions = {
     "simple.push": {
