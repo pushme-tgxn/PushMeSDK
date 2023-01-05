@@ -16,8 +16,11 @@ export default [
             name: "index",
             format: "cjs",
             exports: "default",
+            interop: "defaultOnly",
+            globals: { axios: "axios" },
+            sourcemap: true,
         },
-        plugins: [json(), resolve({ browser: true }), commonjs()],
+        plugins: [json(), resolve({ jsnext: true, preferBuiltins: true, browser: true }), commonjs()],
     },
 
     // Node.js CJS Bundle
@@ -27,6 +30,9 @@ export default [
             file: `dist/node/index.cjs`,
             format: "cjs",
             exports: "default",
+            interop: "defaultOnly",
+            globals: { axios: "axios" },
+            sourcemap: true,
         },
         plugins: [json(), autoExternal(), resolve(), commonjs()],
     },
@@ -38,8 +44,9 @@ export default [
             file: `dist/browser/index.mjs`,
             format: "esm",
             exports: "named",
+            sourcemap: true,
         },
-        plugins: [json(), resolve({ browser: true }), commonjs()],
+        plugins: [json(), resolve({ jsnext: true, preferBuiltins: true, browser: true }), commonjs()],
     },
 
     // Node.js ESM Bundle
@@ -49,6 +56,7 @@ export default [
             file: `dist/node/index.mjs`,
             format: "esm",
             exports: "named",
+            sourcemap: true,
         },
         plugins: [json(), autoExternal(), resolve(), commonjs()],
     },
