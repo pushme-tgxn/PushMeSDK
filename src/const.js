@@ -83,6 +83,7 @@ export const NotificationDefinitions = {
     "input.reply": {
         title: "Reply Input",
         sendDefaultAction: false,
+        hasTextInput: true,
         actions: [
             {
                 title: "Reply",
@@ -93,7 +94,7 @@ export const NotificationDefinitions = {
                 },
                 options: {
                     opensAppToForeground: false,
-                    isAuthenticationRequired: false,
+                    // isAuthenticationRequired: false,
                 },
             },
         ],
@@ -101,6 +102,7 @@ export const NotificationDefinitions = {
     "input.submit": {
         title: "Submit Input",
         sendDefaultAction: false,
+        hasTextInput: true,
         actions: [
             {
                 title: "Submit",
@@ -111,7 +113,7 @@ export const NotificationDefinitions = {
                 },
                 options: {
                     opensAppToForeground: false,
-                    isAuthenticationRequired: false,
+                    // isAuthenticationRequired: false,
                 },
             },
         ],
