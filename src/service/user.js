@@ -55,6 +55,7 @@ export default class UserService {
     getPushHistory() {
         return this.apiService.push.history();
     }
+
     deleteSelf() {
         return this.apiService._callApi("/user", "DELETE");
     }
