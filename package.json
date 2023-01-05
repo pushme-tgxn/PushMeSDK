@@ -7,13 +7,13 @@
         "console",
         "sdk"
     ],
-    "version": "1.7.0",
+    "version": "1.7.1",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
-    "main": "./cjs/index.cjs",
-    "module": "./mjs/index.mjs",
+    "main": "./dist/node/index.cjs",
+    "module": "./dist/node/index.mjs",
     "scripts": {
         "bundle": "rollup -c",
-        "postbundle": "cp ./src/index.d.ts ./mjs/index.d.ts && cp ./src/index.d.ts ./cjs/index.d.ts",
+        "postbundle": "cp ./src/index.d.ts ./src/index.d.ts && cp ./src/index.d.ts ./cjs/index.d.ts",
         "test": "run-s -n test-cjs test-esm",
         "test-cjs": "mocha test/test-sdk-cjs.cjs",
         "test-esm": "mocha test/test-sdk-esm.mjs",
@@ -23,25 +23,44 @@
     },
     "exports": {
         ".": {
-            "require": "./cjs/index.cjs",
-            "default": "./mjs/index.mjs"
-        }
+            "types": {
+                "require": "./src/index.d.ts",
+                "default": "./src/index.d.ts"
+            },
+            "browser": {
+                "require": "./dist/browser/index.cjs",
+                "default": "./dist/browser/index.mjs"
+            },
+            "default": {
+                "require": "./dist/node/index.cjs",
+                "default": "./dist/node/index.mjs"
+            }
+        },
+        "./package.json": "./package.json"
     },
     "files": [
-        "mjs/**",
-        "cjs/**"
+        "src/**",
+        "dist/**"
     ],
     "license": "MIT",
     "dependencies": {
         "axios": "^1.2.2"
     },
     "devDependencies": {
+        "@babel/core": "^7.20.12",
+        "@babel/preset-env": "^7.20.2",
         "@faker-js/faker": "^7.6.0",
+        "@rollup/plugin-babel": "^6.0.3",
+        "@rollup/plugin-commonjs": "^24.0.0",
+        "@rollup/plugin-json": "^6.0.0",
+        "@rollup/plugin-node-resolve": "^15.0.1",
         "chai": "^4.3.7",
         "mocha": "^10.2.0",
         "npm-run-all": "^4.1.5",
         "nyc": "^15.1.0",
         "prettier": "^2.8.1",
-        "rollup": "^3.9.1"
+        "rollup": "^3.9.1",
+        "rollup-plugin-auto-external": "^2.0.0",
+        "rollup-plugin-node-externals": "^5.0.3"
     }
 }

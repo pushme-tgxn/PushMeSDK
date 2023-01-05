@@ -10,9 +10,7 @@ import TopicService from "./service/topic.js";
 import PushService from "./service/push.js";
 import TrioService from "./service/trio.js";
 
-export { BACKEND_URL, NotificationDefinitions, APIError, ServerError, UnauthorizedError };
-
-export default class APIService {
+class APIService {
     constructor(config) {
         this.authorization = null;
         this.backendUrl = BACKEND_URL;
@@ -152,3 +150,11 @@ export default class APIService {
         }
     }
 }
+
+APIService.BACKEND_URL = BACKEND_URL;
+APIService.NotificationDefinitions = NotificationDefinitions;
+APIService.APIError = APIError;
+APIService.ServerError = ServerError;
+APIService.UnauthorizedError = UnauthorizedError;
+
+export default APIService;

@@ -2,14 +2,9 @@ const { expect } = require("chai");
 
 const { faker } = require("@faker-js/faker");
 
-const {
-    default: PushMeSDK,
-    BACKEND_URL,
-    NotificationDefinitions,
-    APIError,
-    ServerError,
-    UnauthorizedError,
-} = require("../cjs/index.cjs");
+const PushMeSDK = require("../dist/node/index.cjs");
+
+const { BACKEND_URL, NotificationDefinitions, APIError, ServerError, UnauthorizedError } = PushMeSDK;
 
 const errorMessages = {
     emailpasswordIncorrect: "email or password is incorrect",

@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import { faker } from "@faker-js/faker"; // https://www.npmjs.com/package/@faker-js/faker
 
-import PushMeSDK, { BACKEND_URL } from "../mjs/index.mjs";
+import PushMeSDK from "../dist/esm/index.mjs";
 
 const errorMessages = {
     emailpasswordIncorrect: "email or password is incorrect",
@@ -31,7 +31,7 @@ describe("PushMeSDK", function () {
         const defaultBackendUrl = "https://pushme.tgxn.net";
 
         it("check default config", async () => {
-            expect(BACKEND_URL).to.exist.and.equal(defaultBackendUrl);
+            expect(PushMeSDK.BACKEND_URL).to.exist.and.equal(defaultBackendUrl);
         });
 
         it("setup instance", async () => {

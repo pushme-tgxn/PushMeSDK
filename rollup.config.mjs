@@ -1,27 +1,55 @@
-const baseConfig = {
-    exports: "named",
-    esModule: false,
-    preserveModules: true,
-};
+import resolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
 
-export default {
-    input: "src/index.js",
-    output: [
-        {
+import json from "@rollup/plugin-json";
+
+import autoExternal from "rollup-plugin-auto-external";
+
+const defaultInput = "./src/index.js";
+
+export default [
+    // Browser CJS Bundle
+    {
+        input: defaultInput,
+        output: {
+            file: `dist/browser/index.cjs`,
+            name: "index",
             format: "cjs",
-            entryFileNames: "[name].cjs",
-            dir: "cjs",
-
-            ...baseConfig,
+            exports: "default",
         },
-        ,
-        {
-            format: "es",
-            entryFileNames: "[name].mjs",
-            dir: "mjs",
+        plugins: [json(), resolve({ browser: true }), commonjs()],
+    },
 
-            ...baseConfig,
+    // Node.js CJS Bundle
+    {
+        input: defaultInput,
+        output: {
+            file: `dist/node/index.cjs`,
+            format: "cjs",
+            exports: "default",
         },
-    ],
-    external: ["axios"],
-};
+        plugins: [json(), autoExternal(), resolve(), commonjs()],
+    },
+
+    // Browser ESM Bundle
+    {
+        input: defaultInput,
+        output: {
+            file: `dist/browser/index.mjs`,
+            format: "esm",
+            exports: "named",
+        },
+        plugins: [json(), resolve({ browser: true }), commonjs()],
+    },
+
+    // Node.js ESM Bundle
+    {
+        input: defaultInput,
+        output: {
+            file: `dist/browser/index.mjs`,
+            format: "esm",
+            exports: "named",
+        },
+        plugins: [json(), resolve(), commonjs()],
+    },
+];
