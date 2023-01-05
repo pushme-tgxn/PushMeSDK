@@ -10,7 +10,8 @@
     "version": "1.7.3",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
     "main": "./dist/node/index.cjs",
-    "module": "./dist/node/index.mjs",
+    "module": "./src/index.js",
+    "type": "module",
     "scripts": {
         "bundle": "rollup -c",
         "postbundle": "cp ./src/index.d.ts ./dist/node/index.d.ts && cp ./src/index.d.ts ./dist/browser/index.d.ts",
@@ -32,12 +33,12 @@
                 "default": "./dist/browser/index.mjs"
             },
             "react-native": {
-                "require": "./dist/node/index.cjs",
-                "default": "./dist/node/index.mjs"
+                "require": "./dist/browser/index.cjs",
+                "default": "./src/index.js"
             },
             "default": {
                 "require": "./dist/node/index.cjs",
-                "default": "./dist/node/index.mjs"
+                "default": "./src/index.js"
             }
         },
         "./package.json": "./package.json"
