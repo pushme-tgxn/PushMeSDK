@@ -41,8 +41,10 @@ describe("PushMeSDK", function () {
         });
 
         it("check PushCategory", async () => {
-            expect(Consts.PushCategory.BUTTON_YES_NO).to.exist.and.equal("button.yes_no");
-            expect(Consts.PushCategory.BUTTON_OPEN_LINK).to.exist.and.equal("button.open_link");
+            const { BUTTON_YES_NO, BUTTON_OPEN_LINK } = Consts.PushCategory;
+
+            expect(BUTTON_YES_NO).to.exist.and.equal("button.yes_no");
+            expect(BUTTON_OPEN_LINK).to.exist.and.equal("button.open_link");
         });
 
         it("check getNotificationCategory", async () => {
