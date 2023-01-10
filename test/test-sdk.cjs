@@ -22,7 +22,7 @@ describe("PushMeSDK", function () {
     const getNewInstance = (config) => {
         return new PushMeSDK({
             ...config,
-            logging: console.log,
+            // logging: console.log,
             backendUrl: testBackendUrl,
         });
     };
@@ -38,6 +38,13 @@ describe("PushMeSDK", function () {
             pushMeInstance = getNewInstance();
 
             expect(pushMeInstance.backendUrl).to.exist.and.equal(testBackendUrl);
+        });
+
+        it("check PushCategory", async () => {
+            const { BUTTON_YES_NO, BUTTON_OPEN_LINK } = PushMeSDK.Consts.PushCategory;
+
+            expect(BUTTON_YES_NO).to.exist.and.equal("button.yes_no");
+            expect(BUTTON_OPEN_LINK).to.exist.and.equal("button.open_link");
         });
 
         it("check getNotificationCategory", async () => {

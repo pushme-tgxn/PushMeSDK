@@ -51,8 +51,9 @@ export default class UserService {
         return this.apiService._callApi("/user", "GET");
     }
 
+    // deprecated!
     getPushHistory() {
-        return this.apiService._callApi("/user/history", "GET");
+        return this.apiService.push.history();
     }
 
     deleteSelf() {

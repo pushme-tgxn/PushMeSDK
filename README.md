@@ -13,20 +13,10 @@ Client and Server side usage supported.
 
 Client-side usage is used when you want to interact with a PushMe Server instance as a user.
 
-### NodeJS
 ```js
-const PushMe = require("@pushme-tgxn/pushmesdk");
+import PushMeSDK from "@pushme-tgxn/pushmesdk";
 
-const pushMe = new PushMe();
-const loggedIn = await pushMe.user.emailLogin("example@example.com", "Hunter2");
-```
-
-### Expo
-
-```js
-import PushMe from "@pushme-tgxn/pushmesdk";
-
-const pushMe = new PushMe();
+const pushMe = new PushMeSDK();
 const loggedIn = await pushMe.user.emailLogin("example@example.com", "Hunter2");
 ```
 
@@ -40,9 +30,9 @@ Server-Side usage can be used to send push notifications, and check for response
 Send a Push message given a client secret.
 
 ```js
-const PushMe = require("@pushme-tgxn/pushmesdk");
+import PushMeSDK from "@pushme-tgxn/pushmesdk";
 
-const pushMe = new PushMe();
+const pushMe = new PushMeSDK();
 const pushedMessage = await pushMe.user.pushToTopic(topicSecret, {
     title: "Hello World!",
     body: "This is a test message."
