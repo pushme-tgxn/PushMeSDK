@@ -18,7 +18,7 @@ export const PushCategory = {
     INPUT_SUBMIT: "input.submit",
 };
 
-export const NotificationDefinitions = {
+export const PushDefinition = {
     [PushCategory.SIMPLE]: {
         title: "Simple Push",
         sendDefaultAction: true,

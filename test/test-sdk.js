@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import { faker } from "@faker-js/faker"; // https://www.npmjs.com/package/@faker-js/faker
 
-import PushMeSDK from "../src/index.js";
+import PushMeSDK, { Consts, Errors } from "../src/index.js";
 
 const errorMessages = {
     emailpasswordIncorrect: "email or password is incorrect",
@@ -31,7 +31,7 @@ describe("PushMeSDK", function () {
         const defaultBackendUrl = "https://pushme.tgxn.net";
 
         it("check default config", async () => {
-            expect(PushMeSDK.BACKEND_URL).to.exist.and.equal(defaultBackendUrl);
+            expect(Consts.BACKEND_URL).to.exist.and.equal(defaultBackendUrl);
         });
 
         it("setup instance", async () => {
@@ -41,8 +41,8 @@ describe("PushMeSDK", function () {
         });
 
         it("check PushCategory", async () => {
-            expect(PushMeSDK.PushCategory.BUTTON_YES_NO).to.exist.and.equal("button.yes_no");
-            expect(PushMeSDK.PushCategory.BUTTON_OPEN_LINK).to.exist.and.equal("button.open_link");
+            expect(Consts.PushCategory.BUTTON_YES_NO).to.exist.and.equal("button.yes_no");
+            expect(Consts.PushCategory.BUTTON_OPEN_LINK).to.exist.and.equal("button.open_link");
         });
 
         it("check getNotificationCategory", async () => {
@@ -62,7 +62,7 @@ describe("PushMeSDK", function () {
         it("check getNotificationAction DEFAULT_ACTION_IDENTIFIER", async () => {
             const foundAction = pushMeInstance.getNotificationAction(
                 "button.open_link",
-                PushMeSDK.DEFAULT_ACTION_IDENTIFIER
+                Consts.DEFAULT_ACTION_IDENTIFIER
             );
 
             expect(foundAction.title).to.exist.and.equal("Default");
@@ -75,13 +75,10 @@ describe("PushMeSDK", function () {
                 const result = await pushMeInstance._callApi(`/fakepath`, "GET");
                 expect(result).to.not.exist;
             } catch (error) {
-                console.log("error.name", error.name);
-                console.log("error.message", error.message);
-                console.log("error.code", error.code);
+                expect(error instanceof Errors.APIError).to.be.true;
 
-                expect(error.name).to.exist.and.equal("APIError");
-                expect(error.message).to.exist.and.equal("Request failed with status code 404");
                 expect(error.code).to.exist.and.equal(404);
+                expect(error.message).to.exist.and.equal("Request failed with status code 404");
             }
         });
 
@@ -91,13 +88,10 @@ describe("PushMeSDK", function () {
                 const result = await pushMeInstance.user.getCurrentUser();
                 expect(result).to.not.exist;
             } catch (error) {
-                console.log("error.name", error.name);
-                console.log("error.message", error.message);
-                console.log("error.code", error.code);
+                expect(error instanceof Errors.UnauthorizedError).to.be.true;
 
-                expect(error.name).to.exist.and.equal("UnauthorizedError");
-                expect(error.message).to.exist.and.equal("unauthorized");
                 expect(error.code).to.exist.and.equal(401);
+                expect(error.message).to.exist.and.equal("unauthorized");
             }
         });
     });
@@ -153,9 +147,7 @@ describe("PushMeSDK", function () {
                 const result = await pushMeInstance.user.updateEmail("");
                 expect(result).to.not.exist;
             } catch (error) {
-                expect(error.name).to.exist.and.equal("ServerError");
-
-                console.log(error.message);
+                expect(error instanceof Errors.ServerError).to.be.true;
 
                 expect(error.code).to.exist.and.equal(400);
                 expect(error.message).to.exist.and.equal(errorMessages.emailIsRequired);
@@ -173,7 +165,7 @@ describe("PushMeSDK", function () {
                 const result = await pushMeInstance.user.updatePassword("");
                 expect(result).to.not.exist;
             } catch (error) {
-                expect(error.name).to.exist.and.equal("ServerError");
+                expect(error instanceof Errors.ServerError).to.be.true;
 
                 expect(error.code).to.exist.and.equal(400);
                 expect(error.message).to.exist.and.equal(errorMessages.passwordIsRequired);
@@ -224,9 +216,10 @@ describe("PushMeSDK", function () {
                 const result = await testInstance.user.getCurrentUser();
                 expect(result).to.not.exist;
             } catch (error) {
-                expect(error.name).to.exist.and.equal("UnauthorizedError");
-                expect(error.message).to.exist.and.equal("unauthorized");
+                expect(error instanceof Errors.UnauthorizedError).to.be.true;
+
                 expect(error.code).to.exist.and.equal(401);
+                expect(error.message).to.exist.and.equal("unauthorized");
             }
         });
     });
