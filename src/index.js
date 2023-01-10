@@ -1,4 +1,10 @@
-import { DEFAULT_TIMEOUT, BACKEND_URL, DEFAULT_ACTION_IDENTIFIER, NotificationDefinitions } from "./const.js";
+import {
+    DEFAULT_TIMEOUT,
+    BACKEND_URL,
+    DEFAULT_ACTION_IDENTIFIER,
+    NotificationDefinitions,
+    PushCategory,
+} from "./const.js";
 
 import axios from "axios";
 
@@ -158,9 +164,15 @@ class APIService {
     }
 }
 
+// Consts
 APIService.BACKEND_URL = BACKEND_URL;
-APIService.NotificationDefinitions = NotificationDefinitions;
 APIService.DEFAULT_ACTION_IDENTIFIER = DEFAULT_ACTION_IDENTIFIER;
+
+// Maps
+APIService.NotificationDefinitions = NotificationDefinitions;
+APIService.PushCategory = PushCategory;
+
+// Errors
 APIService.APIError = APIError;
 APIService.ServerError = ServerError;
 APIService.UnauthorizedError = UnauthorizedError;

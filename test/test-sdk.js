@@ -40,6 +40,11 @@ describe("PushMeSDK", function () {
             expect(pushMeInstance.backendUrl).to.exist.and.equal(testBackendUrl);
         });
 
+        it("check PushCategory", async () => {
+            expect(PushMeSDK.PushCategory.BUTTON_YES_NO).to.exist.and.equal("button.yes_no");
+            expect(PushMeSDK.PushCategory.BUTTON_OPEN_LINK).to.exist.and.equal("button.open_link");
+        });
+
         it("check getNotificationCategory", async () => {
             const foundCategory = pushMeInstance.getNotificationCategory("button.open_link");
 
