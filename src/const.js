@@ -1,5 +1,3 @@
-import exp from "constants";
-
 export const BACKEND_URL = "https://pushme.tgxn.net";
 
 export const DEFAULT_TIMEOUT = 1000;

@@ -38,3 +38,6 @@ const pushedMessage = await pushMe.user.pushToTopic(topicSecret, {
     body: "This is a test message."
 });
 ```
+
+
+Library Build inspired by https://github.com/uuidjs/uuid/tree/main

@@ -7,12 +7,11 @@
         "console",
         "sdk"
     ],
-    "version": "1.9.1",
+    "version": "1.10.0",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
     "sideEffects": false,
-    "main": "./dist/index.js",
-    "module": "./src/index.js",
-    "type": "module",
+    "main": "./dist/commonjs-node/index.js",
+    "module": "./dist/esm-node/index.js",
     "scripts": {
         "babel:clean": "rm -rf ./dist",
         "babel:commonjsNode": "babel --env-name commonjsNode src --source-root src --out-dir ./dist/commonjs-node --copy-files",
@@ -20,9 +19,7 @@
         "babel:esmNode": "babel --env-name esmNode src --source-root src --out-dir ./dist/esm-node --copy-files",
         "babel:esmBrowser": "babel --env-name esmBrowser src --source-root src --out-dir ./dist/esm-browser --copy-files",
         "bundle": "run-s -n babel:*",
-        "test": "run-s -n test-cjs test-esm",
-        "test-cjs": "mocha test/test-sdk.cjs",
-        "test-esm": "mocha test/test-sdk.mjs",
+        "test": "mocha test/sdk.test.js",
         "coverage-cjs": "nyc mocha test/test-sdk.cjs",
         "coverage-esm": "nyc mocha test/test-sdk.mjs",
         "coverage": "run-s -n coverage-cjs coverage-esm"
@@ -43,7 +40,6 @@
         "./package.json": "./package.json"
     },
     "files": [
-        "LICENSE.md",
         "README.md",
         "dist",
         "wrapper.mjs"

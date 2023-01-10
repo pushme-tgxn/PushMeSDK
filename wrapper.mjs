@@ -1,6 +1,6 @@
 import PushMeSDK from "./dist/commonjs-node/index.js";
 
-export default PushMeSDK;
+PushMeSDK.Errors = PushMeSDK.Errors;
+PushMeSDK.Consts = PushMeSDK.Consts;
 
-export const Errors = PushMeSDK.Errors;
-export const Consts = PushMeSDK.Consts;
+export default PushMeSDK;
