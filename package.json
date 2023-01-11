@@ -23,10 +23,7 @@
         "test:esm": "mocha test/built-esm.test.mjs",
         "test:cjs": " mocha test/built-cjs.test.cjs",
         "test": "run-s -n test:*",
-        "coverage:src": "c8 mocha test/sdk.test.mjs",
-        "coverage:cjs": "c8 mocha test/sdk.test.mjs",
-        "coverage:esm": "c8 mocha test/test-sdk.mjs",
-        "coverage": "run-s -n coverage:*"
+        "coverage": "c8 --src src mocha test/sdk.test.mjs"
     },
     "exports": {
         ".": {

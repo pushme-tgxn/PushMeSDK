@@ -21,9 +21,8 @@ describe("PushMeSDK", function () {
     const testBackendUrl = process.env.TEST_BACKEND || "http://localhost:3000";
     const getNewInstance = (config) => {
         return new PushMeSDK({
-            ...config,
-            // logging: console.log,
             backendUrl: testBackendUrl,
+            ...config,
         });
     };
 
@@ -32,6 +31,14 @@ describe("PushMeSDK", function () {
 
         it("check default config", async () => {
             expect(Consts.BACKEND_URL).to.exist.and.equal(defaultBackendUrl);
+        });
+
+        it("setup instance with logger", async () => {
+            const testInstance = getNewInstance({
+                logging: console.log,
+            });
+
+            expect(testInstance.backendUrl).to.exist.and.equal(testBackendUrl);
         });
 
         it("setup instance", async () => {
@@ -192,10 +199,14 @@ describe("PushMeSDK", function () {
             expect(result.pushes.length).to.exist.and.equal(0);
         });
 
+        // create a user that we will then immediately delete
         const testInstance = getNewInstance();
+        let deleteTestUserToken;
         it("can get and login with user to delete", async () => {
             const registerResult = await testInstance.user.emailRegister(emailAddress, password);
             const loginResult = await testInstance.user.emailLogin(emailAddress, password);
+
+            deleteTestUserToken = loginResult.user.token;
 
             expect(registerResult.success).to.exist.and.equal(true);
             expect(registerResult.user).to.exist;
@@ -206,12 +217,23 @@ describe("PushMeSDK", function () {
             expect(loginResult.user.token).to.exist;
         });
 
+        // test getting a new instance of the client with a provided access token
+        let finalInstance;
+        it("can get instance with provided access token", async () => {
+            finalInstance = getNewInstance({
+                accessToken: deleteTestUserToken,
+            });
+
+            expect(finalInstance.authorization).to.exist.and.equal(`Bearer ${deleteTestUserToken}`);
+        });
+
         it("can delete user", async () => {
-            const result = await testInstance.user.deleteSelf();
+            const result = await finalInstance.user.deleteSelf();
 
             expect(result.success).to.exist.and.equal(true);
         });
 
+        // try to use the deleted user's token
         it("error: UnauthorizedError invalid user in signed token error", async () => {
             // custom error is thrown for 401 invalid user
             try {
@@ -403,39 +425,39 @@ describe("PushMeSDK", function () {
         });
     });
 
-    // describe("Trio Push Service", function () {
-    //     // pushing and responses shoudl be available without authentication
-    //     const unauthenticatedInstance = getNewInstance();
+    describe("Trio Push Service", function () {
+        // pushing and responses shoudl be available without authentication
+        const unauthenticatedInstance = getNewInstance();
 
-    //     it("can ping service", async () => {
-    //         const result = await unauthenticatedInstance.trio.ping();
+        it("can ping service", async () => {
+            const result = await unauthenticatedInstance.trio.ping();
 
-    //         expect(result.stat).to.exist.and.equal("OK");
-    //         expect(result.response.time).to.exist;
+            expect(result.stat).to.exist.and.equal("OK");
+            expect(result.response.time).to.exist;
 
-    //         // this will allow authentication with secret instead of signature
-    //         expect(result.response.validation).to.exist.and.equal("skipped");
-    //     });
+            // this will allow authentication with secret instead of signature
+            expect(result.response.validation).to.exist.and.equal("skipped");
+        });
 
-    //     let authDeviceIdent;
-    //     it("can preauth (get device ident)", async () => {
-    //         const result = await unauthenticatedInstance.trio.preAuth(topicKey, topicSecret);
+        let authDeviceIdent;
+        it("can preauth (get device ident)", async () => {
+            const result = await unauthenticatedInstance.trio.preAuth(topicKey, topicSecret);
 
-    //         expect(result.stat).to.exist.and.equal("OK");
-    //         expect(result.response.devices).to.exist;
-    //         expect(result.response.devices[0].device).to.exist;
+            expect(result.stat).to.exist.and.equal("OK");
+            expect(result.response.devices).to.exist;
+            expect(result.response.devices[0].device).to.exist;
 
-    //         authDeviceIdent = result.response.devices[0].device;
-    //     });
+            authDeviceIdent = result.response.devices[0].device;
+        });
 
-    //     // wait for timeout
-    //     it("can auth", async () => {
-    //         const result = await unauthenticatedInstance.trio.auth(topicKey, topicSecret, authDeviceIdent);
+        // wait for timeout
+        it("can auth", async () => {
+            const result = await unauthenticatedInstance.trio.auth(topicKey, topicSecret, authDeviceIdent);
 
-    //         expect(result.stat).to.exist.and.equal("OK");
+            expect(result.stat).to.exist.and.equal("OK");
 
-    //         expect(result.response.result).to.exist.and.equal("deny");
-    //         expect(result.serviceData.actionIdentifier).to.exist.and.equal("noresponse");
-    //     }).timeout(35000);
-    // });
+            expect(result.response.result).to.exist.and.equal("deny");
+            expect(result.serviceData.actionIdentifier).to.exist.and.equal("noresponse");
+        }).timeout(35000);
+    });
 });
