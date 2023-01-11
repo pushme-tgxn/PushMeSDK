@@ -7,7 +7,7 @@
         "console",
         "sdk"
     ],
-    "version": "1.9.13",
+    "version": "1.10.0",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
     "sideEffects": false,
     "main": "./dist/commonjs-node/index.js",
