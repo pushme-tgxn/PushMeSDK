@@ -1,8 +1,8 @@
-import { DEFAULT_TIMEOUT, BACKEND_URL, DEFAULT_ACTION_IDENTIFIER, NotificationDefinitions } from "./const.js";
-
 import axios from "axios";
 
 import { APIError, ServerError, UnauthorizedError } from "./errors.js";
+
+import { DEFAULT_TIMEOUT, BACKEND_URL, DEFAULT_ACTION_IDENTIFIER, PushDefinition, PushCategory } from "./const.js";
 
 import UserService from "./service/user.js";
 import DeviceService from "./service/device.js";
@@ -65,11 +65,11 @@ class APIService {
     }
 
     getNotificationCategory(categoryId) {
-        if (!NotificationDefinitions.hasOwnProperty(categoryId)) {
+        if (!PushDefinition.hasOwnProperty(categoryId)) {
             return false;
         }
 
-        return NotificationDefinitions[categoryId];
+        return PushDefinition[categoryId];
     }
 
     getNotificationAction(categoryId, actionIdentifier) {
@@ -158,11 +158,19 @@ class APIService {
     }
 }
 
-APIService.BACKEND_URL = BACKEND_URL;
-APIService.NotificationDefinitions = NotificationDefinitions;
-APIService.DEFAULT_ACTION_IDENTIFIER = DEFAULT_ACTION_IDENTIFIER;
-APIService.APIError = APIError;
-APIService.ServerError = ServerError;
-APIService.UnauthorizedError = UnauthorizedError;
+// Consts
+export const Consts = {
+    BACKEND_URL,
+    DEFAULT_ACTION_IDENTIFIER,
+    PushDefinition,
+    PushCategory,
+};
+
+// Errors
+export const Errors = {
+    APIError,
+    ServerError,
+    UnauthorizedError,
+};
 
 export default APIService;

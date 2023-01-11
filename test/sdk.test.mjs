@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import { faker } from "@faker-js/faker"; // https://www.npmjs.com/package/@faker-js/faker
 
-import PushMeSDK from "../src/index.js";
+import PushMeSDK, { Consts, Errors } from "../src/index.js";
 
 const errorMessages = {
     emailpasswordIncorrect: "email or password is incorrect",
@@ -21,9 +21,8 @@ describe("PushMeSDK", function () {
     const testBackendUrl = process.env.TEST_BACKEND || "http://localhost:3000";
     const getNewInstance = (config) => {
         return new PushMeSDK({
-            ...config,
-            // logging: console.log,
             backendUrl: testBackendUrl,
+            ...config,
         });
     };
 
@@ -31,13 +30,28 @@ describe("PushMeSDK", function () {
         const defaultBackendUrl = "https://pushme.tgxn.net";
 
         it("check default config", async () => {
-            expect(PushMeSDK.BACKEND_URL).to.exist.and.equal(defaultBackendUrl);
+            expect(Consts.BACKEND_URL).to.exist.and.equal(defaultBackendUrl);
+        });
+
+        it("setup instance with logger", async () => {
+            const testInstance = getNewInstance({
+                logging: console.log,
+            });
+
+            expect(testInstance.backendUrl).to.exist.and.equal(testBackendUrl);
         });
 
         it("setup instance", async () => {
             pushMeInstance = getNewInstance();
 
             expect(pushMeInstance.backendUrl).to.exist.and.equal(testBackendUrl);
+        });
+
+        it("check PushCategory", async () => {
+            const { BUTTON_YES_NO, BUTTON_OPEN_LINK } = Consts.PushCategory;
+
+            expect(BUTTON_YES_NO).to.exist.and.equal("button.yes_no");
+            expect(BUTTON_OPEN_LINK).to.exist.and.equal("button.open_link");
         });
 
         it("check getNotificationCategory", async () => {
@@ -57,7 +71,7 @@ describe("PushMeSDK", function () {
         it("check getNotificationAction DEFAULT_ACTION_IDENTIFIER", async () => {
             const foundAction = pushMeInstance.getNotificationAction(
                 "button.open_link",
-                PushMeSDK.DEFAULT_ACTION_IDENTIFIER
+                Consts.DEFAULT_ACTION_IDENTIFIER
             );
 
             expect(foundAction.title).to.exist.and.equal("Default");
@@ -70,13 +84,10 @@ describe("PushMeSDK", function () {
                 const result = await pushMeInstance._callApi(`/fakepath`, "GET");
                 expect(result).to.not.exist;
             } catch (error) {
-                console.log("error.name", error.name);
-                console.log("error.message", error.message);
-                console.log("error.code", error.code);
+                expect(error instanceof Errors.APIError).to.be.true;
 
-                expect(error.name).to.exist.and.equal("APIError");
-                expect(error.message).to.exist.and.equal("Request failed with status code 404");
                 expect(error.code).to.exist.and.equal(404);
+                expect(error.message).to.exist.and.equal("Request failed with status code 404");
             }
         });
 
@@ -86,13 +97,10 @@ describe("PushMeSDK", function () {
                 const result = await pushMeInstance.user.getCurrentUser();
                 expect(result).to.not.exist;
             } catch (error) {
-                console.log("error.name", error.name);
-                console.log("error.message", error.message);
-                console.log("error.code", error.code);
+                expect(error instanceof Errors.UnauthorizedError).to.be.true;
 
-                expect(error.name).to.exist.and.equal("UnauthorizedError");
-                expect(error.message).to.exist.and.equal("unauthorized");
                 expect(error.code).to.exist.and.equal(401);
+                expect(error.message).to.exist.and.equal("unauthorized");
             }
         });
     });
@@ -148,9 +156,7 @@ describe("PushMeSDK", function () {
                 const result = await pushMeInstance.user.updateEmail("");
                 expect(result).to.not.exist;
             } catch (error) {
-                expect(error.name).to.exist.and.equal("ServerError");
-
-                console.log(error.message);
+                expect(error instanceof Errors.ServerError).to.be.true;
 
                 expect(error.code).to.exist.and.equal(400);
                 expect(error.message).to.exist.and.equal(errorMessages.emailIsRequired);
@@ -168,7 +174,7 @@ describe("PushMeSDK", function () {
                 const result = await pushMeInstance.user.updatePassword("");
                 expect(result).to.not.exist;
             } catch (error) {
-                expect(error.name).to.exist.and.equal("ServerError");
+                expect(error instanceof Errors.ServerError).to.be.true;
 
                 expect(error.code).to.exist.and.equal(400);
                 expect(error.message).to.exist.and.equal(errorMessages.passwordIsRequired);
@@ -193,10 +199,14 @@ describe("PushMeSDK", function () {
             expect(result.pushes.length).to.exist.and.equal(0);
         });
 
+        // create a user that we will then immediately delete
         const testInstance = getNewInstance();
+        let deleteTestUserToken;
         it("can get and login with user to delete", async () => {
             const registerResult = await testInstance.user.emailRegister(emailAddress, password);
             const loginResult = await testInstance.user.emailLogin(emailAddress, password);
+
+            deleteTestUserToken = loginResult.user.token;
 
             expect(registerResult.success).to.exist.and.equal(true);
             expect(registerResult.user).to.exist;
@@ -207,21 +217,33 @@ describe("PushMeSDK", function () {
             expect(loginResult.user.token).to.exist;
         });
 
+        // test getting a new instance of the client with a provided access token
+        let finalInstance;
+        it("can get instance with provided access token", async () => {
+            finalInstance = getNewInstance({
+                accessToken: deleteTestUserToken,
+            });
+
+            expect(finalInstance.authorization).to.exist.and.equal(`Bearer ${deleteTestUserToken}`);
+        });
+
         it("can delete user", async () => {
-            const result = await testInstance.user.deleteSelf();
+            const result = await finalInstance.user.deleteSelf();
 
             expect(result.success).to.exist.and.equal(true);
         });
 
+        // try to use the deleted user's token
         it("error: UnauthorizedError invalid user in signed token error", async () => {
             // custom error is thrown for 401 invalid user
             try {
                 const result = await testInstance.user.getCurrentUser();
                 expect(result).to.not.exist;
             } catch (error) {
-                expect(error.name).to.exist.and.equal("UnauthorizedError");
-                expect(error.message).to.exist.and.equal("unauthorized");
+                expect(error instanceof Errors.UnauthorizedError).to.be.true;
+
                 expect(error.code).to.exist.and.equal(401);
+                expect(error.message).to.exist.and.equal("unauthorized");
             }
         });
     });
@@ -403,39 +425,39 @@ describe("PushMeSDK", function () {
         });
     });
 
-    // describe("Trio Push Service", function () {
-    //     // pushing and responses shoudl be available without authentication
-    //     const unauthenticatedInstance = getNewInstance();
+    describe("Trio Push Service", function () {
+        // pushing and responses shoudl be available without authentication
+        const unauthenticatedInstance = getNewInstance();
 
-    //     it("can ping service", async () => {
-    //         const result = await unauthenticatedInstance.trio.ping();
+        it("can ping service", async () => {
+            const result = await unauthenticatedInstance.trio.ping();
 
-    //         expect(result.stat).to.exist.and.equal("OK");
-    //         expect(result.response.time).to.exist;
+            expect(result.stat).to.exist.and.equal("OK");
+            expect(result.response.time).to.exist;
 
-    //         // this will allow authentication with secret instead of signature
-    //         expect(result.response.validation).to.exist.and.equal("skipped");
-    //     });
+            // this will allow authentication with secret instead of signature
+            expect(result.response.validation).to.exist.and.equal("skipped");
+        });
 
-    //     let authDeviceIdent;
-    //     it("can preauth (get device ident)", async () => {
-    //         const result = await unauthenticatedInstance.trio.preAuth(topicKey, topicSecret);
+        let authDeviceIdent;
+        it("can preauth (get device ident)", async () => {
+            const result = await unauthenticatedInstance.trio.preAuth(topicKey, topicSecret);
 
-    //         expect(result.stat).to.exist.and.equal("OK");
-    //         expect(result.response.devices).to.exist;
-    //         expect(result.response.devices[0].device).to.exist;
+            expect(result.stat).to.exist.and.equal("OK");
+            expect(result.response.devices).to.exist;
+            expect(result.response.devices[0].device).to.exist;
 
-    //         authDeviceIdent = result.response.devices[0].device;
-    //     });
+            authDeviceIdent = result.response.devices[0].device;
+        });
 
-    //     // wait for timeout
-    //     it("can auth", async () => {
-    //         const result = await unauthenticatedInstance.trio.auth(topicKey, topicSecret, authDeviceIdent);
+        // wait for timeout
+        it("can auth", async () => {
+            const result = await unauthenticatedInstance.trio.auth(topicKey, topicSecret, authDeviceIdent);
 
-    //         expect(result.stat).to.exist.and.equal("OK");
+            expect(result.stat).to.exist.and.equal("OK");
 
-    //         expect(result.response.result).to.exist.and.equal("deny");
-    //         expect(result.serviceData.actionIdentifier).to.exist.and.equal("noresponse");
-    //     }).timeout(35000);
-    // });
+            expect(result.response.result).to.exist.and.equal("deny");
+            expect(result.serviceData.actionIdentifier).to.exist.and.equal("noresponse");
+        }).timeout(35000);
+    });
 });

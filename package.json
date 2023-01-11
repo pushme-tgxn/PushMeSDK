@@ -7,26 +7,56 @@
         "console",
         "sdk"
     ],
-    "version": "1.8.1",
+    "version": "1.10.0",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
-    "main": "./src/index.js",
-    "type": "module",
+    "sideEffects": false,
+    "main": "./dist/commonjs-node/index.js",
+    "module": "./dist/esm-node/index.js",
     "scripts": {
-        "test": "mocha test/test-sdk.js",
-        "coverage": "nyc mocha test/test-sdk.js"
+        "babel:clean": "rm -rf ./dist",
+        "babel:commonjsNode": "babel --env-name commonjsNode src --source-root src --out-dir ./dist/commonjs-node ",
+        "babel:commonjsBrowser": "babel --env-name commonjsBrowser src --source-root src --out-dir ./dist/commonjs-browser",
+        "babel:esmNode": "babel --env-name esmNode src --source-root src --out-dir ./dist/esm-node --copy-files",
+        "babel:esmBrowser": "babel --env-name esmBrowser src --source-root src --out-dir ./dist/esm-browser --copy-files",
+        "bundle": "run-s -n babel:*",
+        "test:src": "mocha test/sdk.test.mjs",
+        "test:esm": "mocha test/built-esm.test.mjs",
+        "test:cjs": " mocha test/built-cjs.test.cjs",
+        "test": "run-s -n test:*",
+        "coverage": "c8 mocha test/sdk.test.mjs"
+    },
+    "exports": {
+        ".": {
+            "node": {
+                "module": "./dist/esm-node/index.js",
+                "import": "./dist/esm-node/index.js",
+                "require": "./dist/commonjs-node/index.js"
+            },
+            "browser": {
+                "import": "./dist/esm-browser/index.js",
+                "require": "./dist/commonjs-browser/index.js"
+            },
+            "default": "./dist/esm-browser/index.js"
+        },
+        "./package.json": "./package.json"
     },
     "files": [
-        "src/**"
+        "README.md",
+        "dist"
     ],
     "license": "MIT",
     "dependencies": {
         "axios": "^1.2.2"
     },
     "devDependencies": {
+        "@babel/cli": "7.20.7",
+        "@babel/core": "7.20.12",
+        "@babel/preset-env": "^7.20.2",
         "@faker-js/faker": "^7.6.0",
+        "c8": "^7.12.0",
         "chai": "^4.3.7",
         "mocha": "^10.2.0",
-        "nyc": "^15.1.0",
-        "prettier": "^2.8.1"
+        "npm-run-all": "^4.1.5",
+        "prettier": "^2.8.2"
     }
 }

@@ -8,6 +8,7 @@ services:
       - JWT_SECRET=super-secret-key
       - NO_TRIO_AUTH=true # disable authentication "trio" token (instead it will check the topic secret)
       - DISABLE_PUSHING=true # disable sending any push notifications for tests
+      - MOCK_RESPONSE=true # mock a "noresponse" in server
     ports:
       - 3000:3000
     restart: unless-stopped
