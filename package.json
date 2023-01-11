@@ -7,29 +7,33 @@
         "console",
         "sdk"
     ],
-    "version": "1.10.0",
+    "version": "1.9.13",
     "repository": "https://github.com/pushme-tgxn/PushMeSDK",
     "sideEffects": false,
     "main": "./dist/commonjs-node/index.js",
     "module": "./dist/esm-node/index.js",
     "scripts": {
         "babel:clean": "rm -rf ./dist",
-        "babel:commonjsNode": "babel --env-name commonjsNode src --source-root src --out-dir ./dist/commonjs-node --copy-files",
-        "babel:commonjsBrowser": "babel --env-name commonjsBrowser src --source-root src --out-dir ./dist/commonjs-browser --copy-files",
+        "babel:commonjsNode": "babel --env-name commonjsNode src --source-root src --out-dir ./dist/commonjs-node ",
+        "babel:commonjsBrowser": "babel --env-name commonjsBrowser src --source-root src --out-dir ./dist/commonjs-browser",
         "babel:esmNode": "babel --env-name esmNode src --source-root src --out-dir ./dist/esm-node --copy-files",
         "babel:esmBrowser": "babel --env-name esmBrowser src --source-root src --out-dir ./dist/esm-browser --copy-files",
         "bundle": "run-s -n babel:*",
-        "test": "mocha test/sdk.test.js",
-        "coverage-cjs": "nyc mocha test/test-sdk.cjs",
-        "coverage-esm": "nyc mocha test/test-sdk.mjs",
-        "coverage": "run-s -n coverage-cjs coverage-esm"
+        "test:src": "mocha test/sdk.test.mjs",
+        "test:esm": "mocha test/built-esm.test.mjs",
+        "test:cjs": " mocha test/built-cjs.test.cjs",
+        "test": "run-s -n test:*",
+        "coverage:src": "c8 mocha test/sdk.test.mjs",
+        "coverage:cjs": "c8 mocha test/sdk.test.mjs",
+        "coverage:esm": "c8 mocha test/test-sdk.mjs",
+        "coverage": "run-s -n coverage:*"
     },
     "exports": {
         ".": {
             "node": {
                 "module": "./dist/esm-node/index.js",
-                "require": "./dist/commonjs-node/index.js",
-                "import": "./wrapper.mjs"
+                "import": "./dist/esm-node/index.js",
+                "require": "./dist/commonjs-node/index.js"
             },
             "browser": {
                 "import": "./dist/esm-browser/index.js",
@@ -41,30 +45,21 @@
     },
     "files": [
         "README.md",
-        "dist",
-        "wrapper.mjs"
+        "dist"
     ],
     "license": "MIT",
     "dependencies": {
         "axios": "^1.2.2"
     },
     "devDependencies": {
-        "@babel/cli": "7.18.10",
-        "@babel/core": "7.18.10",
-        "@babel/eslint-parser": "7.18.9",
+        "@babel/cli": "7.20.7",
+        "@babel/core": "7.20.12",
         "@babel/preset-env": "^7.20.2",
         "@faker-js/faker": "^7.6.0",
-        "@rollup/plugin-babel": "^6.0.3",
-        "@rollup/plugin-commonjs": "^24.0.0",
-        "@rollup/plugin-json": "^6.0.0",
-        "@rollup/plugin-node-resolve": "^15.0.1",
+        "c8": "^7.12.0",
         "chai": "^4.3.7",
         "mocha": "^10.2.0",
         "npm-run-all": "^4.1.5",
-        "nyc": "^15.1.0",
-        "prettier": "^2.8.2",
-        "rollup": "^3.9.1",
-        "rollup-plugin-auto-external": "^2.0.0",
-        "rollup-plugin-node-externals": "^5.0.3"
+        "prettier": "^2.8.2"
     }
 }

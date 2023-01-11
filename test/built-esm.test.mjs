@@ -1,16 +1,13 @@
-const expect = require("chai").expect;
+import { expect } from "chai";
 
-const PushMeSDK = require("../dist/commonjs-node/index.js").default;
+import PushMeSDK, { Consts, Errors } from "../dist/esm-node/index.js";
 
-const Consts = require("../dist/commonjs-node/index.js").Consts;
-const Errors = require("../dist/commonjs-node/index.js").Errors;
-
-describe("PushMeSDK CommonJS Import", function () {
+console.log(PushMeSDK);
+describe("PushMeSDK ESM Import", function () {
     const pushMeInstance = new PushMeSDK();
 
     describe("API Class", function () {
         it("check consts", async () => {
-            console.log(Consts);
             expect(Consts.BACKEND_URL).to.exist.and.equal("https://pushme.tgxn.net");
 
             const { BUTTON_YES_NO, BUTTON_OPEN_LINK } = Consts.PushCategory;
