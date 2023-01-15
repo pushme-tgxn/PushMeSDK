@@ -395,10 +395,10 @@ describe("PushMeSDK", function () {
             const result = await unauthenticatedInstance.push.getPushStatus(sentPushIdent);
 
             expect(result.success).to.exist.and.equal(true);
-            expect(result.pushData).to.exist;
-            expect(result.pushData.categoryId).to.exist.and.equal("default");
-            expect(result.pushData.title).to.exist.and.equal("Test Push");
-            expect(result.pushData.body).to.exist.and.equal("This is a test push");
+            expect(result.pushPayload).to.exist;
+            expect(result.pushPayload.categoryId).to.exist.and.equal("default");
+            expect(result.pushPayload.title).to.exist.and.equal("Test Push");
+            expect(result.pushPayload.body).to.exist.and.equal("This is a test push");
         });
 
         it("can respond to push", async () => {
@@ -411,14 +411,14 @@ describe("PushMeSDK", function () {
             });
 
             expect(result.success).to.exist.and.equal(true);
-            // expect(result.pushData).to.exist;
+            // expect(result.pushPayload).to.exist;
         });
 
         it("can get push details", async () => {
             const result = await unauthenticatedInstance.push.getPushStatus(sentPushIdent);
 
             expect(result.success).to.exist.and.equal(true);
-            expect(result.pushData).to.exist;
+            expect(result.pushPayload).to.exist;
             expect(result.firstValidResponse.categoryIdentifier).to.exist.and.equal("button.submit");
             expect(result.firstValidResponse.actionIdentifier).to.exist.and.equal("submit");
             expect(result.firstValidResponse.responseText).to.exist.and.equal("hello");
