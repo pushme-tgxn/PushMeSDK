@@ -414,6 +414,14 @@ describe("PushMeSDK", function () {
             // expect(result.pushPayload).to.exist;
         });
 
+        it("can send recieved receipt", async () => {
+            const result = await unauthenticatedInstance.push.sendReceipt(sentPushIdent, {
+                recieved: "true", // mock event, normal event would be the notification
+            });
+
+            expect(result.success).to.exist.and.equal(true);
+        });
+
         it("can get push details", async () => {
             const result = await unauthenticatedInstance.push.getPushStatus(sentPushIdent);
 
