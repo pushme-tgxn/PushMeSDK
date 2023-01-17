@@ -78,6 +78,11 @@ class APIService {
             return false;
         }
 
+        // no actions
+        if (category.actions.length === 0) {
+            return false;
+        }
+
         const foundAction = category.actions.find((action) => action.identifier === actionIdentifier);
         if (!foundAction) {
             if (actionIdentifier === DEFAULT_ACTION_IDENTIFIER) {
