@@ -18,6 +18,10 @@ export default class PushService {
         });
     }
 
+    sendReceipt(pushIdent, receiptContent) {
+        return this.apiService._callApi(`/push/${pushIdent}/receipt`, "POST", receiptContent);
+    }
+
     respondToPush(pushIdent, response) {
         return this.apiService._callApi(`/push/${pushIdent}/response`, "POST", response);
     }
