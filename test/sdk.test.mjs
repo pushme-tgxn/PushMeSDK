@@ -443,39 +443,39 @@ describe("PushMeSDK", function () {
         });
     });
 
-    // describe("Trio Push Service", function () {
-    //     // pushing and responses shoudl be available without authentication
-    //     const unauthenticatedInstance = getNewInstance();
+    describe("Trio Push Service", function () {
+        // pushing and responses shoudl be available without authentication
+        const unauthenticatedInstance = getNewInstance();
 
-    //     it("can ping service", async () => {
-    //         const result = await unauthenticatedInstance.trio.ping();
+        it("can ping service", async () => {
+            const result = await unauthenticatedInstance.trio.ping();
 
-    //         expect(result.stat).to.exist.and.equal("OK");
-    //         expect(result.response.time).to.exist;
+            expect(result.stat).to.exist.and.equal("OK");
+            expect(result.response.time).to.exist;
 
-    //         // this will allow authentication with secret instead of signature
-    //         expect(result.response.validation).to.exist.and.equal("skipped");
-    //     });
+            // this will allow authentication with secret instead of signature
+            expect(result.response.validation).to.exist.and.equal("skipped");
+        });
 
-    //     let authDeviceIdent;
-    //     it("can preauth (get device ident)", async () => {
-    //         const result = await unauthenticatedInstance.trio.preAuth(topicKey, topicSecret);
+        let authDeviceIdent;
+        it("can preauth (get device ident)", async () => {
+            const result = await unauthenticatedInstance.trio.preAuth(topicKey, topicSecret);
 
-    //         expect(result.stat).to.exist.and.equal("OK");
-    //         expect(result.response.devices).to.exist;
-    //         expect(result.response.devices[0].device).to.exist;
+            expect(result.stat).to.exist.and.equal("OK");
+            expect(result.response.devices).to.exist;
+            expect(result.response.devices[0].device).to.exist;
 
-    //         authDeviceIdent = result.response.devices[0].device;
-    //     });
+            authDeviceIdent = result.response.devices[0].device;
+        });
 
-    //     // wait for timeout
-    //     it("can auth", async () => {
-    //         const result = await unauthenticatedInstance.trio.auth(topicKey, topicSecret, authDeviceIdent);
+        // wait for timeout
+        it("can auth", async () => {
+            const result = await unauthenticatedInstance.trio.auth(topicKey, topicSecret, authDeviceIdent);
 
-    //         expect(result.stat).to.exist.and.equal("OK");
+            expect(result.stat).to.exist.and.equal("OK");
 
-    //         expect(result.response.result).to.exist.and.equal("deny");
-    //         expect(result.serviceData.actionIdentifier).to.exist.and.equal("noresponse");
-    //     }).timeout(35000);
-    // });
+            expect(result.response.result).to.exist.and.equal("deny");
+            expect(result.serviceData.actionIdentifier).to.exist.and.equal("noresponse");
+        }).timeout(35000);
+    });
 });
