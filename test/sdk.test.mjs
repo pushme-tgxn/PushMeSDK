@@ -90,6 +90,12 @@ describe("PushMeSDK", function () {
             expect(foundAction).to.exist.and.equal(false);
         });
 
+        it("BAD: check getNotificationAction", async () => {
+            const foundAction = pushMeInstance.getNotificationAction("simple.push", "fake-action");
+
+            expect(foundAction).to.exist.and.equal(false);
+        });
+
         // axios returns non-200 / network
         it("error: APIError 404 not found // includes code and message on error", async () => {
             try {

@@ -79,7 +79,7 @@ class APIService {
         }
 
         // no actions
-        if (category.actions.length === 0) {
+        if (!category.actions || category.actions.length === 0) {
             return false;
         }
 
