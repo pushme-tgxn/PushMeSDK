@@ -61,6 +61,12 @@ describe("PushMeSDK", function () {
             expect(foundCategory.sendDefaultAction).to.exist.and.equal(true);
         });
 
+        it("BAD: check getNotificationCategory", async () => {
+            const foundCategory = pushMeInstance.getNotificationCategory("fake.action");
+
+            expect(foundCategory).to.exist.and.equal(false);
+        });
+
         it("check getNotificationAction", async () => {
             const foundAction = pushMeInstance.getNotificationAction("button.open_link", "open_link");
 
@@ -76,6 +82,12 @@ describe("PushMeSDK", function () {
 
             expect(foundAction.title).to.exist.and.equal("Default");
             expect(foundAction.identifier).to.exist.and.equal("default");
+        });
+
+        it("BAD: check getNotificationAction", async () => {
+            const foundAction = pushMeInstance.getNotificationAction("button.open_link", "fake-action");
+
+            expect(foundAction).to.exist.and.equal(false);
         });
 
         // axios returns non-200 / network
