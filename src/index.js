@@ -78,6 +78,13 @@ class APIService {
             return false;
         }
 
+        if (actionIdentifier === DEFAULT_ACTION_IDENTIFIER) {
+            return {
+                identifier: "default",
+                title: "Default",
+            };
+        }
+
         // no actions
         if (!category.actions || category.actions.length === 0) {
             return false;
@@ -85,13 +92,6 @@ class APIService {
 
         const foundAction = category.actions.find((action) => action.identifier === actionIdentifier);
         if (!foundAction) {
-            if (actionIdentifier === DEFAULT_ACTION_IDENTIFIER) {
-                return {
-                    identifier: "default",
-                    title: "Default",
-                };
-            }
-
             return false;
         }
 

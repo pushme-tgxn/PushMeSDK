@@ -84,6 +84,13 @@ describe("PushMeSDK", function () {
             expect(foundAction.identifier).to.exist.and.equal("default");
         });
 
+        it("check getNotificationAction DEFAULT_ACTION_IDENTIFIER no actions", async () => {
+            const foundAction = pushMeInstance.getNotificationAction("simple.push", Consts.DEFAULT_ACTION_IDENTIFIER);
+
+            expect(foundAction.title).to.exist.and.equal("Default");
+            expect(foundAction.identifier).to.exist.and.equal("default");
+        });
+
         it("BAD: check getNotificationAction", async () => {
             const foundAction = pushMeInstance.getNotificationAction("button.open_link", "fake-action");
 
