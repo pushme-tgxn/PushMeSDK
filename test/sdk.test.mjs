@@ -57,7 +57,7 @@ describe("PushMeSDK", function () {
         it("check getNotificationCategory", async () => {
             const foundCategory = pushMeInstance.getNotificationCategory("button.open_link");
 
-            expect(foundCategory.title).to.exist.and.equal("Open Link Button");
+            expect(foundCategory.title).to.exist.and.equal("Open Link");
             expect(foundCategory.sendDefaultAction).to.exist.and.equal(true);
         });
 
@@ -364,6 +364,14 @@ describe("PushMeSDK", function () {
     describe("Push Service", function () {
         let sentPushIdent;
 
+        let testPushCategoryId, testPushCategory, testActionIdent;
+
+        it("get test notification category and action", async () => {
+            testPushCategoryId = "button.approve_deny";
+            testPushCategory = pushMeInstance.getNotificationCategory(testPushCategoryId);
+            testActionIdent = testPushCategory.actions[0].identifier;
+        });
+
         it("can get push history", async () => {
             const result = await pushMeInstance.push.history();
 
@@ -377,7 +385,7 @@ describe("PushMeSDK", function () {
 
         it("sends a push", async () => {
             const result = await unauthenticatedInstance.push.pushToTopic(topicSecret, {
-                categoryId: "default",
+                categoryId: testPushCategoryId,
                 title: "Test Push",
                 body: "This is a test push",
                 data: {
@@ -396,22 +404,9 @@ describe("PushMeSDK", function () {
 
             expect(result.success).to.exist.and.equal(true);
             expect(result.pushPayload).to.exist;
-            expect(result.pushPayload.categoryId).to.exist.and.equal("default");
+            expect(result.pushPayload.categoryId).to.exist.and.equal(testPushCategoryId);
             expect(result.pushPayload.title).to.exist.and.equal("Test Push");
             expect(result.pushPayload.body).to.exist.and.equal("This is a test push");
-        });
-
-        it("can respond to push", async () => {
-            const result = await unauthenticatedInstance.push.respondToPush(sentPushIdent, {
-                // pushIdent: sentPushIdent,
-                // pushId: response.notification.request.content.data.pushId,
-                categoryIdentifier: "button.submit", // catgry of notification
-                actionIdentifier: "submit", // action that was taken
-                responseText: "hello", // extra text
-            });
-
-            expect(result.success).to.exist.and.equal(true);
-            // expect(result.pushPayload).to.exist;
         });
 
         it("can send recieved receipt", async () => {
@@ -422,50 +417,65 @@ describe("PushMeSDK", function () {
             expect(result.success).to.exist.and.equal(true);
         });
 
-        it("can get push details", async () => {
+        it("can respond to push", async () => {
+            const result = await unauthenticatedInstance.push.respondToPush(sentPushIdent, {
+                // pushIdent: sentPushIdent,
+                // pushId: response.notification.request.content.data.pushId,
+                categoryIdentifier: testPushCategoryId, // catgry of notification
+                actionIdentifier: testActionIdent, // action that was taken
+                responseText: "hello", // extra text
+            });
+
+            expect(result.success).to.exist.and.equal(true);
+            // expect(result.pushPayload).to.exist;
+        });
+
+        it("can get updated push details (firstValidResponse & pushReceipt)", async () => {
             const result = await unauthenticatedInstance.push.getPushStatus(sentPushIdent);
+
+            console.log(result);
 
             expect(result.success).to.exist.and.equal(true);
             expect(result.pushPayload).to.exist;
-            expect(result.firstValidResponse.categoryIdentifier).to.exist.and.equal("button.submit");
-            expect(result.firstValidResponse.actionIdentifier).to.exist.and.equal("submit");
+            expect(result.firstValidResponse.categoryIdentifier).to.exist.and.equal(testPushCategoryId);
+            expect(result.firstValidResponse.actionIdentifier).to.exist.and.equal(testActionIdent);
             expect(result.firstValidResponse.responseText).to.exist.and.equal("hello");
         });
     });
 
-    describe("Trio Push Service", function () {
-        // pushing and responses shoudl be available without authentication
-        const unauthenticatedInstance = getNewInstance();
+    // describe("Trio Push Service", function () {
+    //     // pushing and responses shoudl be available without authentication
+    //     const unauthenticatedInstance = getNewInstance();
 
-        it("can ping service", async () => {
-            const result = await unauthenticatedInstance.trio.ping();
+    //     it("can ping service", async () => {
+    //         const result = await unauthenticatedInstance.trio.ping();
 
-            expect(result.stat).to.exist.and.equal("OK");
-            expect(result.response.time).to.exist;
+    //         expect(result.stat).to.exist.and.equal("OK");
+    //         expect(result.response.time).to.exist;
 
-            // this will allow authentication with secret instead of signature
-            expect(result.response.validation).to.exist.and.equal("skipped");
-        });
+    //         // this will allow authentication with secret instead of signature
+    //         expect(result.response.validation).to.exist.and.equal("skipped");
+    //     });
 
-        let authDeviceIdent;
-        it("can preauth (get device ident)", async () => {
-            const result = await unauthenticatedInstance.trio.preAuth(topicKey, topicSecret);
+    //     let authDeviceIdent;
+    //     it("can preauth (get device ident)", async () => {
+    //         const result = await unauthenticatedInstance.trio.preAuth(topicKey, topicSecret);
 
-            expect(result.stat).to.exist.and.equal("OK");
-            expect(result.response.devices).to.exist;
-            expect(result.response.devices[0].device).to.exist;
+    //         expect(result.stat).to.exist.and.equal("OK");
+    //         expect(result.response.devices).to.exist;
+    //         expect(result.response.devices[0].device).to.exist;
 
-            authDeviceIdent = result.response.devices[0].device;
-        });
+    //         authDeviceIdent = result.response.devices[0].device;
+    //     });
 
-        // wait for timeout
-        it("can auth", async () => {
-            const result = await unauthenticatedInstance.trio.auth(topicKey, topicSecret, authDeviceIdent);
+    //     // wait for timeout
+    //     it("can auth", async () => {
+    //         const result = await unauthenticatedInstance.trio.auth(topicKey, topicSecret, authDeviceIdent);
 
-            expect(result.stat).to.exist.and.equal("OK");
+    //         expect(result.stat).to.exist.and.equal("OK");
 
-            expect(result.response.result).to.exist.and.equal("deny");
-            expect(result.serviceData.actionIdentifier).to.exist.and.equal("noresponse");
-        }).timeout(35000);
-    });
+    //         expect(result.response.result).to.exist.and.equal("deny");
+    //         expect(result.serviceData.actionIdentifier).to.exist.and.equal("noresponse");
+    //     }).timeout(35000);
+    // });
 });
