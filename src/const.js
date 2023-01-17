@@ -22,7 +22,7 @@ export const PushDefinition = {
         sendDefaultAction: true,
     },
     [PushCategory.BUTTON_APPROVE_DENY]: {
-        title: "Approve/Deny Buttons",
+        title: "Approve/Deny",
         sendDefaultAction: false, // dont send a default action when the notification is tapped
         actions: [
             {
@@ -44,7 +44,7 @@ export const PushDefinition = {
         ],
     },
     [PushCategory.BUTTON_YES_NO]: {
-        title: "Yes/No Buttons",
+        title: "Yes/No",
         sendDefaultAction: false, // dont send a default action when the notification is tapped
         actions: [
             {
@@ -66,7 +66,7 @@ export const PushDefinition = {
         ],
     },
     [PushCategory.BUTTON_ACKNOWLEDGE]: {
-        title: "Acknowledge Button",
+        title: "Acknowledge",
         sendDefaultAction: false, // dont send a default action when the notification is tapped
         actions: [
             {
@@ -80,7 +80,7 @@ export const PushDefinition = {
         ],
     },
     [PushCategory.BUTTON_OPEN_LINK]: {
-        title: "Open Link Button",
+        title: "Open Link",
         sendDefaultAction: true,
         actions: [
             {
