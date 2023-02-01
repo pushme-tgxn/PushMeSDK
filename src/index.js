@@ -14,6 +14,7 @@ class APIService {
     constructor(config) {
         this.authorization = null;
         this.backendUrl = BACKEND_URL;
+        this.apiTimeout = DEFAULT_TIMEOUT;
         this.logger = false;
 
         this.user = new UserService(this);
@@ -32,6 +33,10 @@ class APIService {
 
             if (config.accessToken) {
                 this.setAccessToken(config.accessToken);
+            }
+
+            if (config.timeout) {
+                this.apiTimeout = config.timeout;
             }
 
             if (config.logging) {
@@ -119,7 +124,7 @@ class APIService {
                 method,
                 headers,
                 responseType: "json",
-                timeout: DEFAULT_TIMEOUT,
+                timeout: this.apiTimeout, // set default timeout (may be overridden by the `config` parameter)
                 ...config,
             };
 
