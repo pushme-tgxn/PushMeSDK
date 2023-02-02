@@ -20,7 +20,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Start docker container
-      working-directory: ./test
+        working-directory: ./test
         run: |
           docker-compose run --rm pushme npx sequelize-cli db:migrate --env test
           docker-compose up -d

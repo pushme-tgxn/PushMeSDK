@@ -4,7 +4,7 @@
 name: Coverage Pipeline
 
 # trigger build when pushing, or when creating a pull request
-on: [ pull_request]
+on: [ pull_request ]
 
 jobs:
   coverage:
@@ -21,8 +21,8 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Start docker container
+        working-directory: ./test
         run: |
-          cd test
           docker-compose run --rm pushme npx sequelize-cli db:migrate --env test
           docker-compose up -d
 
@@ -35,6 +35,10 @@ jobs:
 
       - name: Create Bundles
         run: npm run bundle
+
+      - name: Get Docker Logs
+        working-directory: ./test
+        run: docker-compose logs
 
       # finally run the tests
       - run: npm run coverage
