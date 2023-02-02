@@ -11,4 +11,6 @@ services:
       - MOCK_RESPONSE=true # mock a "noresponse" in server
     ports:
       - 3000:3000
+    volumes:
+      - ./.data/:/data/
     restart: unless-stopped
